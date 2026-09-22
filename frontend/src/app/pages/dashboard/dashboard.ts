@@ -2,44 +2,28 @@ import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DashboardService, EquiposService, OrdenesService, PlanesService } from '../../core/api.services';
 import { ToastService } from '../../shared/ui/toast';
+import { UiPageHeader } from '../../shared/ui/page-header';
 import type { Plan, ResumenDashboard } from '../../core/models';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, UiPageHeader],
   template: `
     <div class="mx-auto flex w-full max-w-7xl flex-col gap-8">
-      <header class="flex flex-col justify-between gap-6 pb-2 md:flex-row md:items-center">
-        <div class="flex min-w-0 flex-1 max-w-2xl flex-col gap-1.5">
-          <div class="flex items-center gap-2.5 text-xs font-medium text-slate-400">
-            <span class="inline-flex items-center gap-1.5 rounded bg-emerald-50/80 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700">
-              Garantía de Calidad Técnica
-            </span>
-            <span>•</span>
-            <span>Res. 3100 / 2019</span>
-          </div>
-          <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900" style="font-family:'Montserrat',sans-serif">
-            Tablero de Control
-          </h1>
-          <p class="mt-1 text-sm text-slate-500 leading-relaxed">
-            Monitoreo técnico y aseguramiento metrológico — Resolución 3100 de 2019
-          </p>
+      <ui-page-header title="Tablero de Control" subtitle="Monitoreo técnico y aseguramiento metrológico — Resolución 3100 de 2019">
+        <div class="inline-flex cursor-default items-center gap-2 rounded border border-slate-200/80 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 shadow-sm" style="font-family:'Roboto',sans-serif">
+          <span class="material-symbols-outlined text-[17px] text-slate-400">calendar_today</span>
+          <span class="capitalize">{{ mesActual() }}</span>
+          <span class="text-slate-300">·</span>
+          <span class="text-slate-500">Semana {{ semanaISO() }}</span>
         </div>
-        <div class="flex shrink-0 items-center gap-3 self-start md:self-center">
-          <div class="inline-flex cursor-default items-center gap-2 rounded border border-slate-200/80 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 shadow-sm" style="font-family:'Roboto',sans-serif">
-            <span class="material-symbols-outlined text-[17px] text-slate-400">calendar_today</span>
-            <span class="capitalize">{{ mesActual() }}</span>
-            <span class="text-slate-300">·</span>
-            <span class="text-slate-500">Semana {{ semanaISO() }}</span>
-          </div>
-          <button type="button" (click)="cargar()"
-            class="inline-flex items-center gap-2 rounded border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 cursor-pointer">
-            <span class="material-symbols-outlined text-[16px] text-slate-400">sync</span>
-            <span>Actualizar</span>
-          </button>
-        </div>
-      </header>
+        <button type="button" (click)="cargar()"
+          class="inline-flex items-center gap-2 rounded border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 cursor-pointer">
+          <span class="material-symbols-outlined text-[16px] text-slate-400">sync</span>
+          <span>Actualizar</span>
+        </button>
+      </ui-page-header>
 
       @if (cargando()) {
         <p class="text-sm text-slate-500" style="font-family:'Roboto',sans-serif">Cargando tablero…</p>
@@ -220,7 +204,7 @@ import type { Plan, ResumenDashboard } from '../../core/models';
                   <tr class="transition-colors hover:bg-slate-50/60">
                     <td class="px-6 py-4">
                       <div class="flex items-center gap-3.5">
-                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-sm bg-slate-100 text-slate-600">
                           <span class="material-symbols-outlined text-[18px]">air</span>
                         </div>
                         <div class="flex min-w-0 flex-col">
@@ -274,6 +258,7 @@ import type { Plan, ResumenDashboard } from '../../core/models';
 export class Dashboard {
   private readonly dash = inject(DashboardService);
   private readonly planesApi = inject(PlanesService);
+  private readonly ordenesApi = inject(OrdenesService);
   private readonly toast = inject(ToastService);
 
   readonly resumen = signal<ResumenDashboard | null>(null);
@@ -298,8 +283,16 @@ export class Dashboard {
   }
 
   generarOT(p: Plan): void {
-    // Navega a órdenes con pre-selección — el módulo de órdenes se encarga de la creación
-    this.toast.info('Generar OT', `Equipo ${p.equipoSerial} — usa “Nueva OT” en Órdenes`);
+    this.ordenesApi.crear({
+      equipoId: p.equipoId,
+      tipo: 'CORRECTIVO',
+      titulo: `Correctivo vencido — ${p.equipoNombre}`,
+      descripcion: `Plan PL-${p.id} vencido el ${p.proximaFecha}. Generado desde Dashboard.`,
+      fechaProgramada: new Date().toISOString().slice(0, 10),
+    }).subscribe({
+      next: () => { this.toast.exito('OT generada', `OT correctiva para ${p.equipoSerial} creada`); this.cargar(); },
+      error: (e) => this.toast.error('No se pudo generar OT', (e as { error?: { detail?: string } })?.error?.detail ?? 'Intenta de nuevo'),
+    });
   }
 
   estadoEquipo(r: ResumenDashboard, k: string): number { return r.equiposPorEstado?.[k] ?? 0; }

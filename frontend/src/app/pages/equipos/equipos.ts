@@ -3,44 +3,34 @@ import { FormsModule } from '@angular/forms';
 import { CargaMasivaService, EquiposService, PlanesService, ReportesService } from '../../core/api.services';
 import { ToastService } from '../../shared/ui/toast';
 import { AuthService } from '../../core/auth.service';
+import { UiPageHeader } from '../../shared/ui/page-header';
 import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga } from '../../core/models';
 
 @Component({
   selector: 'app-equipos',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiPageHeader],
   template: `
-    <!-- Title block -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/60">
-      <div class="min-w-0 flex-1 max-w-[50%]">
-        <h1 class="font-display text-2xl lg:text-3xl font-bold tracking-tight text-slate-900" style="font-family:'Montserrat',sans-serif">
-          Inventario de Equipos Biomédicos
-        </h1>
-        <p class="mt-1 text-sm text-slate-500 leading-relaxed">
-          Gestión centralizada del estándar de dotación hospitalaria, hojas de vida técnica y trazabilidad ante INVIMA y MinSalud.
-        </p>
+    <ui-page-header title="Inventario de Equipos" subtitle="Gestión centralizada del estándar de dotación hospitalaria, hojas de vida técnica y trazabilidad ante INVIMA y MinSalud.">
+      <div class="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200/80 rounded-md px-3 py-1.5 shadow-sm">
+        <span class="material-symbols-outlined text-[16px] text-[#044e46]">verified</span>
+        <span>Estándar Dotación: <strong class="text-slate-700">Conforme</strong></span>
       </div>
-      <div class="flex shrink-0 items-center gap-2">
-        <div class="flex items-center gap-2 text-xs text-slate-500 bg-white border border-slate-200/80 rounded-md px-3 py-1.5 shadow-sm">
-          <span class="material-symbols-outlined text-[16px] text-[#044e46]">verified</span>
-          <span>Estándar Dotación: <strong class="text-slate-700">Conforme</strong></span>
-        </div>
-        @if (puedeGestionar()) {
-          <button (click)="nuevo()" class="inline-flex items-center gap-2 bg-[#044e46] hover:bg-[#033b35] text-white text-xs font-semibold px-3.5 py-2 rounded-md shadow-sm cursor-pointer">
-            <span class="material-symbols-outlined text-[17px]">add</span>
-            <span>Registrar Equipo</span>
-          </button>
-          <button (click)="cargaVisible.set(true)" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium px-3.5 py-2 rounded-md cursor-pointer">
-            <span class="material-symbols-outlined text-[17px]">upload_file</span>
-            <span>Carga masiva</span>
-          </button>
-        }
-      </div>
-    </div>
+      @if (puedeGestionar()) {
+        <button (click)="nuevo()" class="inline-flex items-center gap-2 bg-[#044e46] hover:bg-[#033b35] text-white text-xs font-semibold px-3.5 py-2 rounded-md shadow-sm cursor-pointer">
+          <span class="material-symbols-outlined text-[17px]">add</span>
+          <span>Registrar Equipo</span>
+        </button>
+        <button (click)="cargaVisible.set(true)" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium px-3.5 py-2 rounded-md cursor-pointer">
+          <span class="material-symbols-outlined text-[17px]">upload_file</span>
+          <span>Carga masiva</span>
+        </button>
+      }
+    </ui-page-header>
 
     <!-- KPIs -->
     <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-      <div class="bg-white rounded-lg p-5 border border-slate-200/70 shadow-sm">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs font-medium tracking-wide uppercase">Total Equipos</span>
           <span class="material-symbols-outlined text-[19px] text-slate-400">devices</span>
@@ -50,7 +40,7 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
           <span class="text-xs text-slate-400">registrados</span>
         </div>
       </div>
-      <div class="bg-white rounded-lg p-5 border border-slate-200/70 shadow-sm">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs font-medium tracking-wide uppercase">Operativos</span>
           <span class="w-2 h-2 rounded-full bg-emerald-600"></span>
@@ -60,7 +50,7 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
           <span class="text-xs text-emerald-700 font-medium">disponibles</span>
         </div>
       </div>
-      <div class="bg-white rounded-lg p-5 border border-slate-200/70 shadow-sm">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs font-medium tracking-wide uppercase">En Mantenimiento</span>
           <span class="w-2 h-2 rounded-full bg-amber-500/80"></span>
@@ -70,7 +60,7 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
           <span class="text-xs text-slate-500">en taller</span>
         </div>
       </div>
-      <div class="bg-white rounded-lg p-5 border border-slate-200/70 shadow-sm">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs font-medium tracking-wide uppercase">Fuera de Servicio</span>
           <span class="w-2 h-2 rounded-full bg-rose-500/80"></span>
@@ -87,17 +77,17 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
       <div class="p-5 border-b border-slate-100 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
         <div class="relative flex-1 max-w-md">
           <span class="material-symbols-outlined absolute left-3.5 top-1/2 -translate-y-1/2 text-[19px] text-slate-400 pointer-events-none">search</span>
-          <input [(ngModel)]="fUbicacion" (ngModelChange)="pagina.set(0); cargar()" class="w-full pl-10 pr-4 py-2 bg-slate-50/80 hover:bg-slate-50 focus:bg-white border border-slate-200 rounded-md text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#044e46] transition-all" placeholder="Buscar por serie, modelo o servicio..." />
+          <input [(ngModel)]="fUbicacion" (ngModelChange)="pagina.set(0); cargar()" class="w-full pl-10 pr-4 py-2 bg-slate-50/80 hover:bg-slate-50 focus:bg-white border border-slate-200 rounded-sm text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1 focus:ring-[#044e46] transition-all" placeholder="Buscar por serie, modelo o servicio..." />
         </div>
         <div class="flex flex-wrap items-center gap-3">
-          <select [(ngModel)]="fRiesgo" (ngModelChange)="pagina.set(0); cargar()" class="py-2 pl-3 pr-8 bg-slate-50/80 border border-slate-200 rounded-md text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#044e46] cursor-pointer">
+          <select [(ngModel)]="fRiesgo" (ngModelChange)="pagina.set(0); cargar()" class="py-2 pl-3 pr-8 bg-slate-50/80 border border-slate-200 rounded-sm text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#044e46] cursor-pointer">
             <option value="">Riesgo (todos)</option><option>I</option><option>IIA</option><option>IIB</option><option>III</option>
           </select>
-          <select [(ngModel)]="fEstado" (ngModelChange)="pagina.set(0); cargar()" class="py-2 pl-3 pr-8 bg-slate-50/80 border border-slate-200 rounded-md text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#044e46] cursor-pointer">
+          <select [(ngModel)]="fEstado" (ngModelChange)="pagina.set(0); cargar()" class="py-2 pl-3 pr-8 bg-slate-50/80 border border-slate-200 rounded-sm text-xs text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#044e46] cursor-pointer">
             <option value="">Estado (todos)</option><option>OPERATIVO</option><option>EN_MANTENIMIENTO</option><option>FUERA_DE_SERVICIO</option><option>DADO_DE_BAJA</option>
           </select>
-          <button (click)="pagina.set(0); cargar()" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium px-3.5 py-2 rounded-md cursor-pointer">Filtrar</button>
-          <button (click)="cargar()" class="inline-flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs px-3 py-2 rounded-md cursor-pointer"><span class="material-symbols-outlined text-[16px]">refresh</span></button>
+          <button (click)="pagina.set(0); cargar()" class="inline-flex items-center gap-2 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium px-3.5 py-2 rounded-sm cursor-pointer">Filtrar</button>
+          <button (click)="cargar()" class="inline-flex items-center gap-2 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs px-3 py-2 rounded-sm cursor-pointer"><span class="material-symbols-outlined text-[16px]">refresh</span></button>
         </div>
       </div>
 
@@ -190,21 +180,21 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
               <h3 class="text-base font-semibold text-slate-900" style="font-family:'Montserrat',sans-serif">{{ editando() ? 'Editar equipo' : 'Registrar equipo' }}</h3>
               <p class="mt-0.5 text-xs text-slate-500">Completa los datos de la hoja de vida técnica (Res. 3100 de 2019).</p>
             </div>
-            <button (click)="cerrarForm()" class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            <button (click)="cerrarForm()" class="rounded-sm p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
           </div>
           <div class="grid grid-cols-2 gap-4 px-6 py-5">
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Serial* <input [(ngModel)]="form.serial" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Nombre* <input [(ngModel)]="form.nombre" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Marca <input [(ngModel)]="form.marca" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Modelo <input [(ngModel)]="form.modelo" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Ubicación* <input [(ngModel)]="form.ubicacion" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Riesgo INVIMA* <select [(ngModel)]="form.clasificacionRiesgo" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm cursor-pointer"><option>I</option><option>IIA</option><option>IIB</option><option>III</option></select></label>
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Adquisición <input type="date" [(ngModel)]="form.fechaAdquisicion" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
-            <label class="grid gap-1 text-xs font-medium text-slate-600">Periodicidad (días)* <input type="number" min="1" [(ngModel)]="form.periodicidadMantenimientoDias" class="h-9 rounded-md border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Serial* <input [(ngModel)]="form.serial" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Nombre* <input [(ngModel)]="form.nombre" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Marca <input [(ngModel)]="form.marca" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Modelo <input [(ngModel)]="form.modelo" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Ubicación* <input [(ngModel)]="form.ubicacion" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Riesgo INVIMA* <select [(ngModel)]="form.clasificacionRiesgo" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm cursor-pointer"><option>I</option><option>IIA</option><option>IIB</option><option>III</option></select></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Adquisición <input type="date" [(ngModel)]="form.fechaAdquisicion" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
+            <label class="grid gap-1 text-xs font-medium text-slate-600">Periodicidad (días)* <input type="number" min="1" [(ngModel)]="form.periodicidadMantenimientoDias" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-sm focus:outline-none focus:ring-1 focus:ring-[#044e46]" /></label>
           </div>
           <div class="flex justify-end gap-2 border-t border-slate-100 px-6 py-4">
-            <button (click)="cerrarForm()" class="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer">Cancelar</button>
-            <button (click)="guardar()" class="rounded-md bg-[#044e46] px-4 py-2 text-xs font-semibold text-white hover:bg-[#033b35] cursor-pointer">Guardar</button>
+            <button (click)="cerrarForm()" class="rounded-sm border border-slate-200 bg-white px-4 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50 cursor-pointer">Cancelar</button>
+            <button (click)="guardar()" class="rounded-sm bg-[#044e46] px-4 py-2 text-xs font-semibold text-white hover:bg-[#033b35] cursor-pointer">Guardar</button>
           </div>
         </div>
       </div>
@@ -216,13 +206,13 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
         <div class="w-full max-w-xl rounded-2xl border border-slate-200 bg-white shadow-xl" (click)="$event.stopPropagation()">
           <div class="flex items-start justify-between px-6 pt-5 pb-4 border-b border-slate-100">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-lg bg-emerald-50 text-[#044e46] flex items-center justify-center"><span class="material-symbols-outlined text-[22px]">vital_signs</span></div>
+              <div class="w-10 h-10 rounded-sm bg-emerald-50 text-[#044e46] flex items-center justify-center"><span class="material-symbols-outlined text-[22px]">vital_signs</span></div>
               <div>
                 <h3 class="font-bold text-sm text-slate-900" style="font-family:'Montserrat',sans-serif">Ficha técnica: {{ d.serial }}</h3>
                 <p class="text-xs text-slate-400">ID #{{ d.id }} · {{ d.ubicacion }}</p>
               </div>
             </div>
-            <button (click)="detalle.set(null)" class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            <button (click)="detalle.set(null)" class="rounded-sm p-1.5 text-slate-400 hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
           </div>
           <div class="px-6 py-4 space-y-3 text-sm">
             <p><span class="font-medium">Equipo:</span> {{ d.nombre }} · {{ d.marca ?? '—' }} {{ d.modelo ?? '' }}</p>
@@ -230,8 +220,8 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
             @if (planEquipo(); as p) { <p class="text-slate-500">Plan: próxima {{ p.proximaFecha }} ({{ p.diasRestantes }}d, {{ p.estado }})</p> }
           </div>
           <div class="flex justify-end gap-2 border-t border-slate-100 px-6 py-4">
-            <button (click)="detalle.set(null)" class="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs hover:bg-slate-50 cursor-pointer">Cerrar</button>
-            <button (click)="hojaDeVida(d)" class="rounded-md bg-[#044e46] px-4 py-2 text-xs font-semibold text-white hover:bg-[#033b35] cursor-pointer">Hoja de vida PDF</button>
+            <button (click)="detalle.set(null)" class="rounded-sm border border-slate-200 bg-white px-4 py-2 text-xs hover:bg-slate-50 cursor-pointer">Cerrar</button>
+            <button (click)="hojaDeVida(d)" class="rounded-sm bg-[#044e46] px-4 py-2 text-xs font-semibold text-white hover:bg-[#033b35] cursor-pointer">Hoja de vida PDF</button>
           </div>
         </div>
       </div>
@@ -246,23 +236,23 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
               <h3 class="text-base font-semibold text-slate-900" style="font-family:'Montserrat',sans-serif">Carga masiva</h3>
               <p class="mt-0.5 text-xs text-slate-500">Importa hasta 2.000 equipos desde CSV o Excel (.xlsx). Plantilla con serial, nombre, ubicación, riesgo.</p>
             </div>
-            <button (click)="cargaVisible.set(false)" class="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            <button (click)="cargaVisible.set(false)" class="rounded-sm p-1.5 text-slate-400 hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
           </div>
           <div class="px-6 py-5 space-y-4">
-            <div class="flex items-center gap-3 rounded-lg border border-dashed border-slate-300 bg-slate-50 p-4">
+            <div class="flex items-center gap-3 rounded-sm border border-dashed border-slate-300 bg-slate-50 p-4">
               <span class="material-symbols-outlined text-slate-400">upload_file</span>
               <input type="file" accept=".csv,.xlsx" (change)="elegir($event)" class="text-sm flex-1" />
             </div>
-            <button (click)="subir()" [disabled]="!archivo" class="w-full inline-flex items-center justify-center gap-2 bg-[#044e46] hover:bg-[#033b35] text-white text-xs font-semibold px-4 py-2 rounded-md disabled:opacity-40 cursor-pointer">Subir archivo</button>
+            <button (click)="subir()" [disabled]="!archivo" class="w-full inline-flex items-center justify-center gap-2 bg-[#044e46] hover:bg-[#033b35] text-white text-xs font-semibold px-4 py-2 rounded-sm disabled:opacity-40 cursor-pointer">Subir archivo</button>
             @if (resultado(); as r) {
-              <div class="rounded-lg bg-slate-50 border border-slate-200 p-3 text-xs space-y-1">
+              <div class="rounded-sm bg-slate-50 border border-slate-200 p-3 text-xs space-y-1">
                 <p><span class="font-medium">Filas leídas:</span> {{ r.filasLeidas }} · <span class="font-medium">Creados:</span> {{ r.equiposCreados }} · <span class="font-medium">Errores:</span> {{ r.errores.length }}</p>
                 @for (e of r.errores; track e.fila) { <p class="text-rose-600">Fila {{ e.fila }} ({{ e.serial }}): {{ e.motivo }}</p> }
               </div>
             }
           </div>
           <div class="flex justify-end gap-2 border-t border-slate-100 px-6 py-4">
-            <button (click)="cargaVisible.set(false)" class="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs hover:bg-slate-50 cursor-pointer">Cerrar</button>
+            <button (click)="cargaVisible.set(false)" class="rounded-sm border border-slate-200 bg-white px-4 py-2 text-xs hover:bg-slate-50 cursor-pointer">Cerrar</button>
           </div>
         </div>
       </div>
@@ -276,8 +266,8 @@ import type { ClasificacionRiesgo, Equipo, EquipoRequest, Plan, ResultadoCarga }
           <h3 class="text-sm font-semibold text-slate-900" style="font-family:'Montserrat',sans-serif">¿Dar de baja el equipo?</h3>
           <p class="mt-1 text-xs text-slate-500">Se marcará <strong>{{ e.serial }}</strong> como <strong>DADO_DE_BAJA</strong>. Conservará trazabilidad pero no aparecerá como operativo.</p>
           <div class="mt-5 flex justify-center gap-2">
-            <button (click)="confirmarBaja.set(null)" class="rounded-md border border-slate-200 bg-white px-4 py-2 text-xs font-medium hover:bg-slate-50 cursor-pointer">Cancelar</button>
-            <button (click)="ejecutarBaja()" class="rounded-md bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 cursor-pointer">Dar de baja</button>
+            <button (click)="confirmarBaja.set(null)" class="rounded-sm border border-slate-200 bg-white px-4 py-2 text-xs font-medium hover:bg-slate-50 cursor-pointer">Cancelar</button>
+            <button (click)="ejecutarBaja()" class="rounded-sm bg-rose-600 px-4 py-2 text-xs font-semibold text-white hover:bg-rose-700 cursor-pointer">Dar de baja</button>
           </div>
         </div>
       </div>

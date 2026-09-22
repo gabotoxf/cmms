@@ -3,6 +3,12 @@ import { authGuard, rolesGuard } from './core/auth.guard';
 
 export const routes: Routes = [
   {
+    path: '',
+    pathMatch: 'full',
+    title: 'CMMS Biomédico — Ingeniería clínica sin hallazgos',
+    loadComponent: () => import('./pages/landing/landing').then(m => m.Landing)
+  },
+  {
     path: 'login',
     title: 'Iniciar sesión — CMMS',
     loadComponent: () => import('./pages/login/login').then(m => m.Login)

@@ -7,27 +7,24 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgTemplateOutlet],
   template: `
-    <aside class="flex w-70 shrink-0 flex-col gap-6 border-r border-slate-200 bg-white p-4">
+    <aside class="relative flex w-70 shrink-0 flex-col gap-6 overflow-hidden bg-[#044e46] p-4 text-white">
+      <div class="pointer-events-none absolute inset-0 bg-gradient-to-br from-[#0a645a]/40 to-transparent"></div>
+      <div class="pointer-events-none absolute -right-16 -bottom-16 h-64 w-64 rounded-full bg-white/5"></div>
+      <div class="pointer-events-none absolute right-6 top-24 h-40 w-40 rounded-full bg-white/[0.03]"></div>
       <!-- Logo / marca -->
-      <div class="flex items-center gap-3 px-1">
-        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-700 text-white">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 2a10 10 0 1 0 10 10" />
-            <path d="M12 2v4" />
-            <circle cx="12" cy="12" r="1.5" fill="currentColor" stroke="none" />
-            <path d="M12 12 8 15" />
-          </svg>
+      <div class="relative flex items-center gap-3 px-1">
+        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#044e46]">
+          <span class="material-symbols-outlined text-[20px]">medical_services</span>
         </div>
         <div class="leading-tight">
-          <div class="text-lg font-extrabold tracking-tight text-teal-400">CMMS</div>
-          <div class="text-[10px] font-medium uppercase text-slate-400">Res. 3100 de 2019</div>
+          <div class="text-sm font-bold tracking-tight" style="font-family:'Montserrat',sans-serif">BIOCMMS</div>
+          <div class="text-[10px] tracking-widest uppercase opacity-60">Ingeniería Clínica</div>
         </div>
       </div>
 
       <!-- Navegación -->
-      <nav class="flex flex-col gap-1">
-        <span class="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wide text-slate-400">Módulos</span>
+      <nav class="relative flex flex-col gap-1">
+        <span class="mb-1 px-3 text-[11px] font-semibold uppercase tracking-wide text-white/50">Módulos</span>
 
         <a routerLink="/dashboard" routerLinkActive="nav-active" class="nav-link">
           <ng-container *ngTemplateOutlet="icon; context: { name: 'dashboard' }" />
@@ -62,7 +59,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
         }
       </nav>
 
-      <small class="mt-auto px-1 text-slate-400">Salud · Res. 3100</small>
+      <small class="relative mt-auto px-1 text-xs text-white/50">Salud · Res. 3100</small>
     </aside>
 
     <!-- Set de iconos (outline, 18px, trazo 2) -->
@@ -114,16 +111,16 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       border-radius: 0.5rem;
       padding: 0.55rem 0.75rem;
       font-size: 0.9rem;
-      color: #475569;
+      color: rgba(255,255,255,0.7);
       transition: background-color .15s ease, color .15s ease;
     }
     .nav-link:hover {
-      background: #f1f5f9;
-      color: #0f172a;
+      background: rgba(255,255,255,0.1);
+      color: white;
     }
     .nav-link.nav-active {
-      background: #e0e7ff;
-      color: #0f766e;
+      background: white;
+      color: #044e46;
       font-weight: 600;
     }
   `],

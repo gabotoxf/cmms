@@ -3,38 +3,28 @@ import { FormsModule } from '@angular/forms';
 import { EquiposService, OrdenesService, UsuariosService } from '../../core/api.services';
 import { ToastService } from '../../shared/ui/toast';
 import { AuthService } from '../../core/auth.service';
+import { UiPageHeader } from '../../shared/ui/page-header';
 import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../../core/models';
 
 @Component({
   selector: 'app-ordenes',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiPageHeader],
   template: `
-    <!-- Title & Action Bar -->
-    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-5 mb-8">
-      <div class="min-w-0 flex-1 max-w-[50%]">
-        <div class="flex items-center gap-2.5 mb-1.5">
-          <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900" style="font-family:'Montserrat',sans-serif">Órdenes de Trabajo Biomédicas</h1>
-        </div>
-        <p class="text-sm text-slate-500 leading-relaxed">
-          Trazabilidad metrológica y operativa de intervenciones preventivas, correctivas y de calibración bajo Res. 3100 de 2019.
-        </p>
-      </div>
-      <div class="flex shrink-0 items-center gap-3">
-        @if (puedeGestionar()) {
-          <button (click)="generar()" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-md hover:bg-slate-50 transition shadow-sm cursor-pointer" style="font-family:'Montserrat',sans-serif">
-            <span class="material-symbols-outlined text-[17px] text-slate-500">auto_schedule</span> Generar Preventivas del Mes
-          </button>
-          <button (click)="modalNueva.set(true)" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#044e46] hover:bg-[#033b35] rounded-md shadow-sm cursor-pointer" style="font-family:'Montserrat',sans-serif">
-            <span class="material-symbols-outlined text-[17px]">add</span> Nueva Orden
-          </button>
-        }
-      </div>
-    </div>
+    <ui-page-header title="Órdenes de Trabajo Biomédicas" subtitle="Trazabilidad metrológica y operativa de intervenciones preventivas, correctivas y de calibración bajo Res. 3100 de 2019.">
+      @if (puedeGestionar()) {
+        <button (click)="generar()" class="inline-flex items-center gap-2 px-3.5 py-2 text-xs font-semibold text-slate-700 bg-white border border-slate-300 rounded-sm hover:bg-slate-50 transition shadow-sm cursor-pointer" style="font-family:'Montserrat',sans-serif">
+          <span class="material-symbols-outlined text-[17px] text-slate-500">auto_schedule</span> Generar Preventivas del Mes
+        </button>
+        <button (click)="modalNueva.set(true)" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-[#044e46] hover:bg-[#033b35] rounded-sm shadow-sm cursor-pointer" style="font-family:'Montserrat',sans-serif">
+          <span class="material-symbols-outlined text-[17px]">add</span> Nueva Orden
+        </button>
+      }
+    </ui-page-header>
 
     <!-- KPIs -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-8">
+      <div class="bg-white p-5 rounded-sm border border-slate-200/80 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-3">
           <span class="text-xs font-medium uppercase tracking-wider">Total del Mes</span>
           <span class="material-symbols-outlined text-[19px] text-slate-400">receipt_long</span>
@@ -44,7 +34,7 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
           <span class="text-xs text-slate-500">órdenes</span>
         </div>
       </div>
-      <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm">
+      <div class="bg-white p-5 rounded-sm border border-slate-200/80 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-3">
           <span class="text-xs font-medium uppercase tracking-wider">Pendientes</span>
           <span class="material-symbols-outlined text-[19px] text-rose-500">error_outline</span>
@@ -54,7 +44,7 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
           <span class="text-xs text-rose-700 bg-rose-50 border border-rose-100 px-1.5 py-0.5 rounded">Prioridad</span>
         </div>
       </div>
-      <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm">
+      <div class="bg-white p-5 rounded-sm border border-slate-200/80 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-3">
           <span class="text-xs font-medium uppercase tracking-wider">En Ejecución</span>
           <span class="material-symbols-outlined text-[19px] text-amber-500">build</span>
@@ -64,7 +54,7 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
           <span class="text-xs text-slate-500">en taller</span>
         </div>
       </div>
-      <div class="bg-white p-5 rounded-xl border border-slate-200/80 shadow-sm">
+      <div class="bg-white p-5 rounded-sm border border-slate-200/80 shadow-sm">
         <div class="flex items-center justify-between text-slate-500 mb-3">
           <span class="text-xs font-medium uppercase tracking-wider">Tasa Cumplimiento</span>
           <span class="material-symbols-outlined text-[19px] text-[#0f766e]">check_circle</span>
@@ -80,25 +70,25 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
     <div class="grid grid-cols-1 xl:grid-cols-12 gap-7 items-start">
       <div class="xl:col-span-9 space-y-4">
         <!-- Filters -->
-        <div class="bg-white rounded-xl border border-slate-200/80 p-3 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
+        <div class="bg-white rounded-sm border border-slate-200/80 p-3 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm">
           <div class="flex items-center gap-1 overflow-x-auto w-full md:w-auto">
             @for (t of tabs; track t.key) {
-              <button (click)="setTab(t.key)" class="px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer whitespace-nowrap"
+              <button (click)="setTab(t.key)" class="px-3 py-1.5 rounded-sm text-xs font-medium transition cursor-pointer whitespace-nowrap"
                 [class.bg-slate-900]="fEstado===t.key" [class.text-white]="fEstado===t.key"
                 [class.text-slate-600]="fEstado!==t.key" [class.hover:bg-slate-100]="fEstado!==t.key" style="font-family:'Montserrat',sans-serif">
                 {{ t.label }} <span class="ml-1 opacity-70">{{ tabCount(t.key) }}</span>
               </button>
             }
-            <button (click)="setTab('')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition cursor-pointer" [class.bg-slate-900]="fEstado===''" [class.text-white]="fEstado===''" [class.text-slate-600]="fEstado!==''" [class.hover:bg-slate-100]="fEstado!==''">Todas</button>
+            <button (click)="setTab('')" class="px-3 py-1.5 rounded-sm text-xs font-medium transition cursor-pointer" [class.bg-slate-900]="fEstado===''" [class.text-white]="fEstado===''" [class.text-slate-600]="fEstado!==''" [class.hover:bg-slate-100]="fEstado!==''">Todas</button>
           </div>
           <div class="w-full md:w-72 relative">
             <span class="material-symbols-outlined absolute left-3 top-2.5 text-[18px] text-slate-400 pointer-events-none">search</span>
-            <input [(ngModel)]="busqueda" (ngModelChange)="filtrarBusqueda()" class="w-full pl-9 pr-3.5 py-1.5 text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-[#044e46] focus:bg-white transition" placeholder="Buscar por # OT, equipo o técnico..." />
+            <input [(ngModel)]="busqueda" (ngModelChange)="filtrarBusqueda()" class="w-full pl-9 pr-3.5 py-1.5 text-xs text-slate-700 bg-slate-50 border border-slate-200 rounded-sm focus:outline-none focus:ring-1 focus:ring-[#044e46] focus:bg-white transition" placeholder="Buscar por # OT, equipo o técnico..." />
           </div>
         </div>
 
         <!-- Table -->
-        <div class="bg-white rounded-xl border border-slate-200/80 shadow-sm overflow-hidden">
+        <div class="bg-white rounded-sm border border-slate-200/80 shadow-sm overflow-hidden">
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
@@ -131,7 +121,14 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
                     <td class="py-4 px-5 max-w-xs"><div class="truncate font-medium text-slate-800">{{ o.titulo }}</div><div class="text-[11px] text-slate-400 truncate">{{ o.descripcion ?? '—' }}</div></td>
                     <td class="py-4 px-5 whitespace-nowrap">
                       @if (o.tecnicoNombre) {
-                        <div class="flex items-center gap-2"><span class="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-semibold">{{ inicialesTecnico(o.tecnicoNombre) }}</span><span class="font-medium text-slate-800">{{ o.tecnicoNombre }}</span></div>
+                        <div class="flex items-center gap-2">
+                          @if (avatarTecnico(o.tecnicoId); as url) {
+                            <img [src]="url" alt="Avatar" class="w-6 h-6 rounded-full object-cover border border-slate-200 shrink-0" />
+                          } @else {
+                            <span class="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-[10px] font-semibold shrink-0">{{ inicialesTecnico(o.tecnicoNombre) }}</span>
+                          }
+                          <span class="font-medium text-slate-800">{{ o.tecnicoNombre }}</span>
+                        </div>
                       } @else { <span class="text-slate-400 italic">Sin asignar</span> }
                     </td>
                     <td class="py-4 px-5 text-right whitespace-nowrap">
@@ -165,7 +162,7 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
 
       <!-- Sidebar -->
       <div class="xl:col-span-3 space-y-5">
-        <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
+        <div class="bg-white rounded-sm border border-slate-200/80 p-5 shadow-sm">
           <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
             <div>
               <h3 class="font-semibold text-sm text-slate-900" style="font-family:'Montserrat',sans-serif">Personal en Turno</h3>
@@ -177,7 +174,11 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
             @for (t of tecnicos(); track t.id) {
               <div class="flex items-center justify-between">
                 <div class="flex items-center gap-2.5">
-                  <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-semibold">{{ (t.nombre[0] || '') + (t.apellido[0] || '') }}</div>
+                  @if (avatarTecnico(t.id); as url) {
+                    <img [src]="url" alt="Avatar" class="w-8 h-8 rounded-full object-cover border border-slate-200 shrink-0" />
+                  } @else {
+                    <div class="w-8 h-8 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-xs font-semibold shrink-0">{{ (t.nombre[0] || '') + (t.apellido[0] || '') }}</div>
+                  }
                   <div>
                     <div class="text-xs font-semibold text-slate-900">{{ t.nombre }} {{ t.apellido }}</div>
                     <div class="text-[11px] text-slate-400">{{ t.rol }}</div>
@@ -189,16 +190,16 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
           </div>
         </div>
 
-        <div class="bg-white rounded-xl border border-slate-200/80 p-5 shadow-sm">
+        <div class="bg-white rounded-sm border border-slate-200/80 p-5 shadow-sm">
           <div class="flex items-start gap-3 mb-3">
-            <div class="w-8 h-8 rounded-lg bg-[#044e46]/10 border border-[#044e46]/20 text-[#044e46] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[18px]">verified_user</span></div>
+            <div class="w-8 h-8 rounded-sm bg-[#044e46]/10 border border-[#044e46]/20 text-[#044e46] flex items-center justify-center shrink-0"><span class="material-symbols-outlined text-[18px]">verified_user</span></div>
             <div>
               <h3 class="font-semibold text-sm text-slate-900" style="font-family:'Montserrat',sans-serif">Patrón de Calibración</h3>
               <p class="text-[11px] text-slate-400">Trazabilidad ONAC</p>
             </div>
           </div>
           <p class="text-xs text-slate-600 leading-relaxed mb-4">Toda acta exige vinculación con equipo patrón vigente.</p>
-          <div class="bg-slate-50 border border-slate-200/70 rounded-lg p-3 space-y-1.5 text-xs">
+          <div class="bg-slate-50 border border-slate-200/70 rounded-sm p-3 space-y-1.5 text-xs">
             <div class="flex justify-between"><span class="text-slate-400">Analizador:</span><span class="font-medium text-slate-800">Fluke ESA615</span></div>
             <div class="flex justify-between"><span class="text-slate-400">Certificado:</span><span class="font-mono text-slate-700">CERT-2024-884</span></div>
             <div class="flex justify-between pt-1 border-t border-slate-200/60"><span class="text-slate-400">Vigencia:</span><span class="text-emerald-700 font-semibold">Abril 2025 (Al día)</span></div>
@@ -210,26 +211,26 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
     <!-- Modal: Nueva OT -->
     @if (modalNueva()) {
       <div class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4" (click)="modalNueva.set(false)">
-        <div class="w-full max-w-lg rounded-xl border border-slate-200 bg-white shadow-2xl" (click)="$event.stopPropagation()">
+        <div class="w-full max-w-lg rounded-sm border border-slate-200 bg-white shadow-2xl" (click)="$event.stopPropagation()">
           <div class="p-5 border-b border-slate-100 flex items-center justify-between bg-slate-50/60">
             <div>
               <h3 class="font-bold text-base text-slate-900" style="font-family:'Montserrat',sans-serif">Nueva Orden de Trabajo</h3>
               <p class="text-xs text-slate-500">Apertura en plan anual hospitalario</p>
             </div>
-            <button (click)="modalNueva.set(false)" class="p-1 rounded-md text-slate-400 hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            <button (click)="modalNueva.set(false)" class="p-1 rounded-sm text-slate-400 hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
           </div>
           <div class="p-6 space-y-4 text-xs">
-            <label class="grid gap-1 font-semibold text-slate-800">Equipo* <select [(ngModel)]="nueva.equipoId" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs cursor-pointer">@for (e of equipos(); track e.id) { <option [value]="e.id">{{ e.serial }} — {{ e.nombre }}</option> }</select></label>
+            <label class="grid gap-1 font-semibold text-slate-800">Equipo* <select [(ngModel)]="nueva.equipoId" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-xs cursor-pointer">@for (e of equipos(); track e.id) { <option [value]="e.id">{{ e.serial }} — {{ e.nombre }}</option> }</select></label>
             <div class="grid grid-cols-2 gap-3">
-              <label class="grid gap-1 font-semibold text-slate-800">Tipo* <select [(ngModel)]="nueva.tipo" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs cursor-pointer"><option>PREVENTIVO</option><option>CORRECTIVO</option></select></label>
-              <label class="grid gap-1 font-semibold text-slate-800">Fecha programada <input type="date" [(ngModel)]="nueva.fechaProgramada" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs" /></label>
+              <label class="grid gap-1 font-semibold text-slate-800">Tipo* <select [(ngModel)]="nueva.tipo" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-xs cursor-pointer"><option>PREVENTIVO</option><option>CORRECTIVO</option></select></label>
+              <label class="grid gap-1 font-semibold text-slate-800">Fecha programada <input type="date" [(ngModel)]="nueva.fechaProgramada" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-xs" /></label>
             </div>
-            <label class="grid gap-1 font-semibold text-slate-800">Título* <input [(ngModel)]="nueva.titulo" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs" placeholder="Ej: Fuga de presión..." /></label>
-            <label class="grid gap-1 font-semibold text-slate-800">Descripción <input [(ngModel)]="nueva.descripcion" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs" placeholder="Detalle..." /></label>
+            <label class="grid gap-1 font-semibold text-slate-800">Título* <input [(ngModel)]="nueva.titulo" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-xs" placeholder="Ej: Fuga de presión..." /></label>
+            <label class="grid gap-1 font-semibold text-slate-800">Descripción <input [(ngModel)]="nueva.descripcion" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-xs" placeholder="Detalle..." /></label>
           </div>
           <div class="flex justify-end gap-2 border-t border-slate-100 p-5 bg-slate-50/60">
             <button (click)="modalNueva.set(false)" class="px-3 py-1.5 text-xs font-semibold text-slate-600 hover:text-slate-800 cursor-pointer">Cancelar</button>
-            <button (click)="crear()" class="px-4 py-2 text-xs font-semibold text-white bg-[#044e46] hover:bg-[#033b35] rounded-lg shadow-sm cursor-pointer">Crear Orden</button>
+            <button (click)="crear()" class="px-4 py-2 text-xs font-semibold text-white bg-[#044e46] hover:bg-[#033b35] rounded-sm shadow-sm cursor-pointer">Crear Orden</button>
           </div>
         </div>
       </div>
@@ -240,7 +241,7 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
       <div class="fixed inset-0 z-50 flex justify-end bg-slate-900/30" (click)="asignarOrden.set(null)">
         <div class="w-full max-w-sm bg-white border-l border-slate-200 shadow-2xl p-6" (click)="$event.stopPropagation()">
           <h3 class="font-bold text-sm mb-4" style="font-family:'Montserrat',sans-serif">Asignar OT-{{ o.id }} — {{ o.equipoSerial }}</h3>
-          <label class="grid gap-1 text-xs font-semibold">Técnico <select [(ngModel)]="tecSel" class="h-9 rounded-lg border border-slate-200 px-3 text-xs cursor-pointer">@for (t of tecnicos(); track t.id) { <option [value]="t.id">{{ t.nombre }} {{ t.apellido }}</option> }</select></label>
+          <label class="grid gap-1 text-xs font-semibold">Técnico <select [(ngModel)]="tecSel" class="h-9 rounded-sm border border-slate-200 px-3 text-xs cursor-pointer">@for (t of tecnicos(); track t.id) { <option [value]="t.id">{{ t.nombre }} {{ t.apellido }}</option> }</select></label>
           <div class="mt-4 flex justify-end gap-2">
             <button (click)="asignarOrden.set(null)" class="px-3 py-1.5 rounded border border-slate-200 bg-white text-xs hover:bg-slate-50 cursor-pointer">Cancelar</button>
             <button (click)="confirmarAsignar()" class="px-4 py-1.5 rounded bg-[#044e46] text-white text-xs font-semibold hover:bg-[#033b35] cursor-pointer">Asignar</button>
@@ -259,16 +260,16 @@ import type { CrearOrdenRequest, Equipo, Orden, TipoOrden, Usuario } from '../..
               <h3 class="font-bold text-base mt-1" style="font-family:'Montserrat',sans-serif">Cerrar OT — {{ o.equipoSerial }}</h3>
               <p class="text-xs text-slate-500">Protocolo Res. 3100</p>
             </div>
-            <button (click)="cerrarOrden.set(null)" class="p-1 rounded-md hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            <button (click)="cerrarOrden.set(null)" class="p-1 rounded-sm hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
           </div>
           <div class="p-6 space-y-4 flex-1 overflow-y-auto text-xs">
-            <label class="grid gap-1 font-semibold">Resultado* <textarea [(ngModel)]="resultadoCierre" rows="3" class="rounded-lg border border-slate-200 p-2 text-xs" placeholder="Equipo en servicio / Operativo..."></textarea></label>
+            <label class="grid gap-1 font-semibold">Resultado* <textarea [(ngModel)]="resultadoCierre" rows="3" class="rounded-sm border border-slate-200 p-2 text-xs" placeholder="Equipo en servicio / Operativo..."></textarea></label>
             <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="rounded border-slate-300 text-[#044e46]" /> <span>Prueba de seguridad eléctrica</span></label>
             <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" checked class="rounded border-slate-300 text-[#044e46]" /> <span>Calibración conforme</span></label>
           </div>
           <div class="p-5 border-t border-slate-100 bg-slate-50/70 flex justify-end gap-3">
             <button (click)="cerrarOrden.set(null)" class="px-3.5 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 cursor-pointer">Cancelar</button>
-            <button (click)="ejecutarCerrar()" class="px-4 py-2 text-xs font-semibold text-white bg-[#044e46] hover:bg-[#033b35] rounded-lg shadow-sm cursor-pointer">Guardar y Emitir Acta</button>
+            <button (click)="ejecutarCerrar()" class="px-4 py-2 text-xs font-semibold text-white bg-[#044e46] hover:bg-[#033b35] rounded-sm shadow-sm cursor-pointer">Guardar y Emitir Acta</button>
           </div>
         </div>
       </div>
@@ -285,6 +286,7 @@ export class Ordenes {
   readonly ordenes = signal<Orden[]>([]);
   readonly equipos = signal<Equipo[]>([]);
   readonly tecnicos = signal<Usuario[]>([]);
+  readonly avatares = signal<Map<number, string>>(new Map());
   readonly pagina = signal(0);
   readonly totalPaginas = signal(1);
   readonly total = signal(0);
@@ -343,7 +345,30 @@ export class Ordenes {
   }
   cargarApoyos(): void {
     this.eq.listar({ pagina: 0, tamano: 100 }).subscribe({ next: (p) => { this.equipos.set(p.contenido); if (p.contenido[0]) this.nueva.equipoId = p.contenido[0].id; } });
-    this.us.listar('TECNICO').subscribe({ next: (t) => { this.tecnicos.set(t); if (t[0]) this.tecSel = t[0].id; }, error: () => this.us.listar().subscribe({ next: (t) => this.tecnicos.set(t) }) });
+    this.us.listar('TECNICO').subscribe({
+      next: (t) => { this.tecnicos.set(t); if (t[0]) this.tecSel = t[0].id; this.cargarAvataresTecnicos(t); },
+      error: () => this.us.listar().subscribe({ next: (t) => { this.tecnicos.set(t); this.cargarAvataresTecnicos(t); } }),
+    });
+  }
+
+  avatarTecnico(id: number | null | undefined): string | null {
+    if (id == null) return null;
+    return this.avatares().get(id) ?? null;
+  }
+
+  private cargarAvataresTecnicos(usuarios: Usuario[]): void {
+    for (const u of usuarios) {
+      this.us.avatarDe(u.id).subscribe({
+        next: (b) => {
+          if (b && b.size > 0) {
+            const url = URL.createObjectURL(b);
+            const m = new Map(this.avatares());
+            m.set(u.id, url);
+            this.avatares.set(m);
+          }
+        },
+      });
+    }
   }
   prev(): void { if (this.pagina() > 0) { this.pagina.update(v => v - 1); this.cargar(); } }
   next(): void { if (this.pagina() + 1 < this.totalPaginas()) { this.pagina.update(v => v + 1); this.cargar(); } }

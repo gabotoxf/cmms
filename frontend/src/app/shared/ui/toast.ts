@@ -1,4 +1,4 @@
-import { Component, Injectable, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, Injectable, OnDestroy, inject, signal } from '@angular/core';
 
 export type ToastTipo = 'exito' | 'error' | 'aviso' | 'info';
 
@@ -58,7 +58,7 @@ export class ToastService {
   selector: 'app-toasts',
   standalone: true,
   template: `
-    <div class="pointer-events-none fixed right-4 z-[100] flex w-80 flex-col gap-2" style="top: calc(3.5rem + 0.75rem)" aria-live="polite">
+    <div class="pointer-events-none fixed right-4 z-[100] flex w-80 flex-col gap-2" [style.top]="top()" aria-live="polite">
       @for (t of toast.lista(); track t.id) {
         <div class="pointer-events-auto flex items-start gap-2.5 overflow-hidden rounded-xl border border-slate-200 bg-white py-3 pl-3 pr-2 shadow-lg"
              [class.toast-in]="!t.saliendo" [class.toast-out]="t.saliendo">
@@ -85,8 +85,34 @@ export class ToastService {
     @keyframes toast-out { to { transform: translateX(110%); opacity: 0; } }
   `],
 })
-export class ToastsComponent {
+export class ToastsComponent implements AfterViewInit, OnDestroy {
   readonly toast = inject(ToastService);
+  readonly top = signal('calc(3.5rem + 1.4rem)');
+  private ro?: ResizeObserver;
+  private onResize?: () => void;
+
+  ngAfterViewInit(): void {
+    if (typeof document === 'undefined') return;
+    const calc = (): void => {
+      const el = document.querySelector('app-topbar header') as HTMLElement | null;
+      const h = el?.getBoundingClientRect().height ?? 56;
+      this.top.set(`calc(${h}px + 1.35rem)`);
+    };
+    calc();
+    this.onResize = calc;
+    window.addEventListener('resize', calc);
+    const el = document.querySelector('app-topbar header') as HTMLElement | null;
+    if (el && typeof ResizeObserver !== 'undefined') {
+      this.ro = new ResizeObserver(calc);
+      this.ro.observe(el);
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (this.onResize) window.removeEventListener('resize', this.onResize);
+    this.ro?.disconnect();
+  }
+
   icono(t: ToastTipo): string { return ICONO[t]; }
   acento(t: ToastTipo): string { return ACENTO[t]; }
   barra(t: ToastTipo): string { return BARRA[t]; }

@@ -3,37 +3,26 @@ import { FormsModule } from '@angular/forms';
 import { PlanesService } from '../../core/api.services';
 import { ToastService } from '../../shared/ui/toast';
 import { AuthService } from '../../core/auth.service';
+import { UiPageHeader } from '../../shared/ui/page-header';
 import type { Plan, RegistroEjecucion, ResumenRevision } from '../../core/models';
 
 @Component({
   selector: 'app-planes',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, UiPageHeader],
   template: `
-    <!-- Title -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-200/60">
-      <div class="min-w-0 flex-1 max-w-[50%] space-y-1">
-        <div class="flex items-center gap-2">
-          <span class="text-[11px] font-semibold uppercase tracking-wider text-[#044e46] bg-emerald-50 px-2 py-0.5 rounded border border-[#044e46]/10" style="font-family:'Montserrat',sans-serif">Estándar de Dotación &amp; Mantenimiento</span>
-          <span class="text-xs text-slate-400">|</span>
-          <span class="text-xs text-slate-500">Numeral 11.2 Res. 3100 de 2019</span>
-        </div>
-        <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900" style="font-family:'Montserrat',sans-serif">Cronograma y Planes de Mantenimiento</h1>
-        <p class="mt-1 text-sm text-slate-500 leading-relaxed">Supervisión integral de periodicidad técnica y trazabilidad metrológica en parque activo hospitalario.</p>
-      </div>
-      <div class="flex shrink-0 items-center gap-2">
-        <button (click)="sincronizar()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-slate-200/80 text-slate-600 hover:bg-slate-50 text-xs font-medium shadow-sm cursor-pointer">
-          <span class="material-symbols-outlined text-[16px] text-slate-500">sync</span> Sincronizar Cronograma
-        </button>
-        <button (click)="exportar()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-slate-200/80 text-slate-600 hover:bg-slate-50 text-xs font-medium shadow-sm cursor-pointer">
-          <span class="material-symbols-outlined text-[16px] text-slate-500">ios_share</span> Exportar
-        </button>
-      </div>
-    </div>
+    <ui-page-header title="Cronograma y Planes de Mantenimiento" subtitle="Supervisión integral de periodicidad técnica y trazabilidad metrológica en parque activo hospitalario.">
+      <button (click)="sincronizar()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-white border border-slate-200/80 text-slate-600 hover:bg-slate-50 text-xs font-medium shadow-sm cursor-pointer">
+        <span class="material-symbols-outlined text-[16px] text-slate-500">sync</span> Sincronizar Cronograma
+      </button>
+      <button (click)="exportar()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-white border border-slate-200/80 text-slate-600 hover:bg-slate-50 text-xs font-medium shadow-sm cursor-pointer">
+        <span class="material-symbols-outlined text-[16px] text-slate-500">ios_share</span> Exportar
+      </button>
+    </ui-page-header>
 
     <!-- KPIs -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mt-6">
-      <div class="bg-white rounded-xl p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs">Total Planes Programados</span>
           <span class="material-symbols-outlined text-lg text-slate-400">calendar_month</span>
@@ -44,7 +33,7 @@ import type { Plan, RegistroEjecucion, ResumenRevision } from '../../core/models
         </div>
         <div class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span> 100% inventariado</div>
       </div>
-      <div class="bg-white rounded-xl p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs">Al Día (Cumpliendo)</span>
           <span class="material-symbols-outlined text-lg text-teal-600">check_circle</span>
@@ -55,7 +44,7 @@ import type { Plan, RegistroEjecucion, ResumenRevision } from '../../core/models
         </div>
         <div class="mt-3 text-[11px] text-slate-500 flex items-center justify-between"><span>Meta ≥ 95%</span><span class="text-emerald-700 font-medium">Óptimo</span></div>
       </div>
-      <div class="bg-white rounded-xl p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs">Próximos a Vencer</span>
           <span class="material-symbols-outlined text-lg text-amber-600">history_toggle_off</span>
@@ -66,7 +55,7 @@ import type { Plan, RegistroEjecucion, ResumenRevision } from '../../core/models
         </div>
         <div class="mt-3 text-[11px] text-slate-500 flex items-center gap-1.5"><span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Cuadrilla programada</div>
       </div>
-      <div class="bg-white rounded-xl p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
+      <div class="bg-white rounded-sm p-5 border border-slate-200/70 shadow-sm hover:border-slate-300 transition-colors">
         <div class="flex items-center justify-between text-slate-500 mb-2">
           <span class="text-xs">Vencidos / Prioritarios</span>
           <span class="material-symbols-outlined text-lg text-rose-600">notification_important</span>
@@ -80,29 +69,29 @@ import type { Plan, RegistroEjecucion, ResumenRevision } from '../../core/models
     </div>
 
     <!-- Filter bar -->
-    <div class="bg-white p-3 rounded-xl border border-slate-200/70 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mt-6">
+    <div class="bg-white p-3 rounded-sm border border-slate-200/70 shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 mt-6">
       <div class="relative flex-1 min-w-[260px]">
         <span class="material-symbols-outlined text-slate-400 absolute left-3 top-2.5 text-[18px]">search</span>
-        <input [(ngModel)]="busqueda" (ngModelChange)="filtrar()" class="w-full bg-transparent pl-9 pr-4 py-1.5 text-xs text-slate-800 placeholder-slate-400 border-none rounded-lg focus:ring-1 focus:ring-[#044e46] focus:bg-slate-50/50 transition" placeholder="Buscar por código, equipo, serie o servicio..." />
+        <input [(ngModel)]="busqueda" (ngModelChange)="filtrar()" class="w-full bg-transparent pl-9 pr-4 py-1.5 text-xs text-slate-800 placeholder-slate-400 border-none rounded-sm focus:ring-1 focus:ring-[#044e46] focus:bg-slate-50/50 transition" placeholder="Buscar por código, equipo, serie o servicio..." />
       </div>
       <div class="flex flex-wrap items-center gap-2 pt-2 md:pt-0 border-t md:border-t-0 border-slate-100">
-        <select [(ngModel)]="fFrecuencia" (ngModelChange)="filtrar()" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-md py-1 px-2.5 cursor-pointer">
+        <select [(ngModel)]="fFrecuencia" (ngModelChange)="filtrar()" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-sm py-1 px-2.5 cursor-pointer">
           <option value="">Todas las frecuencias</option><option value="30">Mensual (30d)</option><option value="90">Trimestral (90d)</option><option value="180">Semestral (180d)</option><option value="365">Anual (365d)</option>
         </select>
-        <select [(ngModel)]="fEstado" (ngModelChange)="pagina.set(0); cargar()" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-md py-1 px-2.5 cursor-pointer">
+        <select [(ngModel)]="fEstado" (ngModelChange)="pagina.set(0); cargar()" class="bg-slate-50 border border-slate-200 text-slate-700 text-xs rounded-sm py-1 px-2.5 cursor-pointer">
           <option value="">Todos los estados</option><option>VENCIDO</option><option>PROXIMO</option><option>AL_DIA</option>
         </select>
-        <div class="flex items-center bg-slate-100 p-0.5 rounded-lg text-xs">
-          <button (click)="setTab('')" class="px-3 py-1 rounded-md font-medium cursor-pointer" [class.bg-white]="tab()===''" [class.shadow-sm]="tab()===''" [class.text-slate-900]="tab()===''" [class.text-slate-600]="tab()!==''">Todos</button>
-          <button (click)="setTab('VENCIDO')" class="px-3 py-1 rounded-md cursor-pointer" [class.bg-white]="tab()==='VENCIDO'" [class.shadow-sm]="tab()==='VENCIDO'" [class.text-slate-900]="tab()==='VENCIDO'" [class.text-slate-600]="tab()!=='VENCIDO'">Vencidos</button>
-          <button (click)="setTab('PROXIMO')" class="px-3 py-1 rounded-md cursor-pointer" [class.bg-white]="tab()==='PROXIMO'" [class.shadow-sm]="tab()==='PROXIMO'" [class.text-slate-900]="tab()==='PROXIMO'" [class.text-slate-600]="tab()!=='PROXIMO'">Próximos</button>
-          <button (click)="setTab('AL_DIA')" class="px-3 py-1 rounded-md cursor-pointer" [class.bg-white]="tab()==='AL_DIA'" [class.shadow-sm]="tab()==='AL_DIA'" [class.text-slate-900]="tab()==='AL_DIA'" [class.text-slate-600]="tab()!=='AL_DIA'">Al día</button>
+        <div class="flex items-center bg-slate-100 p-0.5 rounded-sm text-xs">
+          <button (click)="setTab('')" class="px-3 py-1 rounded-sm font-medium cursor-pointer" [class.bg-white]="tab()===''" [class.shadow-sm]="tab()===''" [class.text-slate-900]="tab()===''" [class.text-slate-600]="tab()!==''">Todos</button>
+          <button (click)="setTab('VENCIDO')" class="px-3 py-1 rounded-sm cursor-pointer" [class.bg-white]="tab()==='VENCIDO'" [class.shadow-sm]="tab()==='VENCIDO'" [class.text-slate-900]="tab()==='VENCIDO'" [class.text-slate-600]="tab()!=='VENCIDO'">Vencidos</button>
+          <button (click)="setTab('PROXIMO')" class="px-3 py-1 rounded-sm cursor-pointer" [class.bg-white]="tab()==='PROXIMO'" [class.shadow-sm]="tab()==='PROXIMO'" [class.text-slate-900]="tab()==='PROXIMO'" [class.text-slate-600]="tab()!=='PROXIMO'">Próximos</button>
+          <button (click)="setTab('AL_DIA')" class="px-3 py-1 rounded-sm cursor-pointer" [class.bg-white]="tab()==='AL_DIA'" [class.shadow-sm]="tab()==='AL_DIA'" [class.text-slate-900]="tab()==='AL_DIA'" [class.text-slate-600]="tab()!=='AL_DIA'">Al día</button>
         </div>
       </div>
     </div>
 
     <!-- Table -->
-    <div class="bg-white rounded-xl border border-slate-200/70 shadow-sm overflow-hidden mt-4">
+    <div class="bg-white rounded-sm border border-slate-200/70 shadow-sm overflow-hidden mt-4">
       <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
         <div>
           <h2 class="text-base font-semibold text-slate-900" style="font-family:'Montserrat',sans-serif">Planes de Intervención Programados</h2>
@@ -176,7 +165,7 @@ import type { Plan, RegistroEjecucion, ResumenRevision } from '../../core/models
 
     <!-- Historial -->
     @if (hist(); as h) {
-      <div class="bg-white rounded-xl border border-slate-200/70 shadow-sm overflow-hidden mt-6">
+      <div class="bg-white rounded-sm border border-slate-200/70 shadow-sm overflow-hidden mt-6">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h3 class="font-semibold text-sm text-slate-900" style="font-family:'Montserrat',sans-serif">Historial plan #{{ h.planId }}</h3>
           <button (click)="hist.set(null)" class="p-1 rounded hover:bg-slate-100 cursor-pointer"><span class="material-symbols-outlined text-[18px]">close</span></button>
@@ -205,22 +194,22 @@ import type { Plan, RegistroEjecucion, ResumenRevision } from '../../core/models
               <h3 class="text-lg font-bold text-slate-900 tracking-tight" style="font-family:'Montserrat',sans-serif">Registrar Ejecución</h3>
               <p class="text-xs text-slate-500">{{ s.equipoNombre }} • {{ s.equipoSerial }}</p>
             </div>
-            <button (click)="sel.set(null)" class="p-1 rounded-lg hover:bg-slate-100 text-slate-400 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
+            <button (click)="sel.set(null)" class="p-1 rounded-sm hover:bg-slate-100 text-slate-400 cursor-pointer"><span class="material-symbols-outlined text-[20px]">close</span></button>
           </div>
           <div class="p-6 space-y-4 text-xs">
             <div class="grid grid-cols-2 gap-4">
-              <label class="grid gap-1 font-semibold text-slate-700">Fecha* <input type="date" [(ngModel)]="ej.fechaEjecucion" class="h-9 rounded-lg border border-slate-200 bg-slate-50 px-3 text-xs focus:border-[#044e46] focus:ring-0" /></label>
-              <label class="grid gap-1 font-semibold text-slate-700">Técnico* <input [(ngModel)]="ej.tecnico" placeholder="Nombre técnico" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs" /></label>
+              <label class="grid gap-1 font-semibold text-slate-700">Fecha* <input type="date" [(ngModel)]="ej.fechaEjecucion" class="h-9 rounded-sm border border-slate-200 bg-slate-50 px-3 text-xs focus:border-[#044e46] focus:ring-0" /></label>
+              <label class="grid gap-1 font-semibold text-slate-700">Técnico* <input [(ngModel)]="ej.tecnico" placeholder="Nombre técnico" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-xs" /></label>
             </div>
-            <label class="grid gap-1 font-semibold text-slate-700">Descripción <input [(ngModel)]="ej.descripcion" placeholder="Opcional" class="h-9 rounded-lg border border-slate-200 bg-white px-3 text-xs" /></label>
-            <div class="p-3 rounded-lg bg-emerald-50/50 border border-[#044e46]/15 flex items-center gap-3">
+            <label class="grid gap-1 font-semibold text-slate-700">Descripción <input [(ngModel)]="ej.descripcion" placeholder="Opcional" class="h-9 rounded-sm border border-slate-200 bg-white px-3 text-xs" /></label>
+            <div class="p-3 rounded-sm bg-emerald-50/50 border border-[#044e46]/15 flex items-center gap-3">
               <span class="material-symbols-outlined text-[#044e46] text-[20px]">fingerprint</span>
               <span class="text-[11px] text-[#044e46]">Al registrar se emitirá acta foliada con sello SHA-256.</span>
             </div>
           </div>
           <div class="flex justify-end gap-2 border-t border-slate-100 p-5 bg-slate-50/60">
-            <button (click)="sel.set(null)" class="px-4 py-2 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium cursor-pointer">Cancelar</button>
-            <button (click)="guardarEjecucion()" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[#044e46] hover:bg-[#033b35] text-white text-xs font-semibold shadow-sm cursor-pointer"><span class="material-symbols-outlined text-[17px]">verified</span> Registrar y Actualizar</button>
+            <button (click)="sel.set(null)" class="px-4 py-2 rounded-sm border border-slate-200 bg-white hover:bg-slate-50 text-xs font-medium cursor-pointer">Cancelar</button>
+            <button (click)="guardarEjecucion()" class="inline-flex items-center gap-2 px-4 py-2 rounded-sm bg-[#044e46] hover:bg-[#033b35] text-white text-xs font-semibold shadow-sm cursor-pointer"><span class="material-symbols-outlined text-[17px]">verified</span> Registrar y Actualizar</button>
           </div>
         </div>
       </div>
@@ -295,7 +284,16 @@ export class Planes {
   cargarRev(): void { this.api.revision().subscribe({ next: (r) => this.rev.set(r) }); }
 
   sincronizar(): void { this.api.ejecutarRevision().subscribe({ next: (r) => { this.rev.set(r); this.toast.exito(`Sincronizado: ${r.vencidos} vencidos, ${r.proximos} próximos`); this.cargar(); }, error: (e) => this.toast.error('Operación fallida', this.msg(e)) }); }
-  exportar(): void { this.toast.info('Exportar', 'Función no implementada — usa el reporte PDF'); }
+  exportar(): void {
+    const rows = this.filtrados();
+    if (rows.length === 0) { this.toast.aviso('Nada para exportar', 'No hay planes filtrados'); return; }
+    const csv = ['Codigo,Equipo,Serial,Frecuencia,Ultima,Proxima,Estado,DiasRestantes',
+      ...rows.map(p => `PL-${p.id},"${p.equipoNombre}",${p.equipoSerial},${p.frecuenciaDias},${p.ultimaEjecucion ?? ''},${p.proximaFecha},${p.estado},${p.diasRestantes}`)].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = `planes-${new Date().toISOString().slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(url);
+    this.toast.exito('Exportado', `${rows.length} planes en CSV`);
+  }
 
   prev(): void { if (this.pagina() > 0) { this.pagina.update(v => v - 1); } }
   next(): void { if (this.pagina() + 1 < this.totalPaginas()) { this.pagina.update(v => v + 1); } }

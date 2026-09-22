@@ -1,892 +1,553 @@
 <!DOCTYPE html>
 
-<html class="h-full bg-[#f8fafc]" lang="es"><head>
+<html class="scroll-smooth" lang="es"><head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>CMMS Biomédica · Usuarios y Control de Accesos</title>
+<meta content="web_standard" name="shell-type"/>
+<title>CMMS Biomédico Salud · Software de Ingeniería Clínica</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&amp;family=Montserrat:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Roboto:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&amp;family=Roboto:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script>
+<script id="tailwind-config">
     tailwind.config = {
+      darkMode: "class",
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Roboto', '"Plus Jakarta Sans"', 'sans-serif'],
-            mono: ['"JetBrains Mono"', 'monospace'],
-            data: ['"IBM Plex Sans"', 'sans-serif'],
-            heading: ['"Montserrat"', 'sans-serif'],
-          },
           colors: {
-            clinical: {
-              DEFAULT: '#044e46',
-              dark: '#033a34',
-              light: '#e6f3f1',
-            }
-          }
+            "primary": "#042B26",
+            "primary-container": "#0B423B",
+            "primary-light": "#145950",
+            "secondary": "#00A896",
+            "secondary-container": "#99efe5",
+            "accent": "#00C9A7",
+            "accent-soft": "#D2F5EE",
+            "surface-dark": "#031F1C",
+            "surface-navy": "#071B19",
+            "slate-soft": "#F1F5F9",
+            "slate-muted": "#E2E8F0",
+            "body-color": "#475569",
+            "heading-color": "#0F172A",
+            "border-subtle": "#E2E8F0",
+          },
+          fontFamily: {
+            "sans": ["Roboto", "sans-serif"],
+            "display": ["Montserrat", "sans-serif"],
+          },
         }
       }
     }
   </script>
 <style>
-    .tabular-numbers {
-      font-variant-numeric: tabular-nums lining-nums;
+    @layer base {
+      html, body { margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+      h1, h2, h3, h4, h5, h6 { font-family: 'Montserrat', sans-serif; }
     }
-    body {
-      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-      -webkit-font-smoothing: antialiased;
-    }
-    ::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #e2e8f0;
-      border-radius: 2px;
-    }
-    h1, h2, h3, h4, .font-heading {
-      font-family: 'Montserrat', sans-serif !important;
-    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #031F1C; }
+    ::-webkit-scrollbar-thumb { background: #145950; border-radius: 3px; }
   </style>
 </head>
-<body class="h-full font-sans text-slate-900 selection:bg-slate-900 selection:text-white flex overflow-hidden">
-<!-- Persistent Left Sidebar -->
-<aside class="w-60 shrink-0 bg-white border-r border-slate-200/90 flex flex-col justify-between z-30 select-none">
+<body class="bg-slate-soft text-body-color antialiased selection:bg-secondary selection:text-white">
+<!-- TOP HEADER (Translucent deep surgical emerald) -->
+<header class="fixed top-0 left-0 right-0 w-full z-50 bg-primary/95 backdrop-blur-md border-b border-white/10 transition-all">
+<div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+<!-- Brand Logo -->
+<a class="flex items-center gap-3" href="#">
+<div class="w-10 h-10 rounded-lg bg-accent/15 border border-accent/30 flex items-center justify-center text-accent">
+<span class="material-symbols-outlined text-[24px]">medical_services</span>
+</div>
 <div class="flex flex-col">
-<!-- Clinical Brand Mark -->
-<div class="h-16 px-5 flex items-center justify-between border-b border-slate-200/80">
-<div class="flex items-center gap-3">
-<div class="h-7 w-7 rounded border border-slate-900 bg-slate-900 flex items-center justify-center text-white text-[11px] font-mono font-semibold tracking-wider">
-          BIO
-        </div>
-<div class="flex flex-col">
-<span class="text-[13.5px] font-semibold text-slate-900 leading-none tracking-tight font-heading">CMMS Platform</span>
-<span class="text-[10px] text-slate-600 font-mono tracking-wider uppercase mt-1">Ingeniería Clínica</span>
+<span class="font-display font-bold text-white text-base tracking-tight leading-none">CMMS Biomédico</span>
+<span class="text-[11px] font-medium tracking-wider text-accent uppercase mt-1">Ingeniería Clínica · Res. 3100</span>
 </div>
-</div>
-</div>
-<!-- Navigation Section -->
-<div class="px-3 pt-6 pb-2">
-<span class="px-2 text-[10px] font-mono uppercase tracking-[0.14em] text-slate-600 font-medium">Módulos de Control</span>
-</div>
-<nav class="flex flex-col gap-0.5 px-3">
-<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
-<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">dashboard</span>
-<span>Tablero de Control</span>
 </a>
-<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
-<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">devices_other</span>
-<span>Parque Biomédico</span>
-</a>
-<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
-<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">event_repeat</span>
-<span>Planes Preventivos</span>
-</a>
-<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
-<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">task_alt</span>
-<span>Órdenes de Trabajo</span>
-</a>
-<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
-<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">analytics</span>
-<span>Aseguramiento &amp; Métricas</span>
-</a>
-<!-- Active Module -->
-<a class="group relative flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium bg-slate-100/80 text-slate-900 transition-colors" href="#">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-<span class="material-symbols-outlined text-[17px] text-slate-900">badge</span>
-<span>Usuarios y Accesos</span>
-</a>
-<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
-<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
-<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">clinical_notes</span>
-<span>Reportes Regulatorios</span>
-</a>
+<!-- Minimal Navigation -->
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-sm font-medium text-slate-300 hover:text-white transition-colors" href="#pilares">Beneficios</a>
+<a class="text-sm font-medium text-slate-300 hover:text-white transition-colors" href="#modulos">Módulos</a>
+<a class="text-sm font-medium text-slate-300 hover:text-white transition-colors" href="#caso-exito">Caso Clínico</a>
+<a class="text-sm font-medium text-slate-300 hover:text-white transition-colors" href="#planes">Planes</a>
 </nav>
-</div>
-<!-- Sidebar Regulatory Footer Footprint -->
-<div class="p-3 border-t border-slate-200/80">
-<div class="p-2.5 bg-slate-50/80 rounded border border-slate-200/60 flex flex-col gap-1.5">
-<div class="flex items-center justify-between">
-<span class="font-mono text-[10px] uppercase font-medium text-slate-600 tracking-wider">Habilitación MSPS</span>
-<span class="font-mono text-[10px] text-slate-500">v2.4</span>
-</div>
-<div class="flex items-center gap-1.5">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-<span class="text-[11px] font-medium text-slate-700">Res. 3100 / 2019</span>
-</div>
-<span class="text-[10px] text-slate-500 font-data">Estándar Dotación Num. 4.2</span>
-</div>
-</div>
-</aside>
-<!-- Main Viewport Container -->
-<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
-<!-- Topbar Header -->
-<header class="h-16 bg-white border-b border-slate-200/80 px-7 flex items-center justify-between shrink-0 z-20">
+<!-- Access & Primary CTA -->
 <div class="flex items-center gap-4">
-<!-- Breadcrumb & Clinic Info -->
-<div class="flex items-center gap-2 font-mono text-[11px] text-slate-500 tracking-wide uppercase">
-<span>Clínica San Rafael</span>
-<span class="text-slate-300">/</span>
-<span class="text-slate-700 font-medium">Sede Principal</span>
+<a class="hidden sm:inline-flex text-sm font-medium text-slate-300 hover:text-white transition-colors px-3 py-2" href="#demo">
+          Acceso IPS
+        </a>
+<a class="inline-flex items-center gap-2 bg-secondary hover:bg-accent text-primary font-display font-semibold text-xs uppercase tracking-wider px-5 py-2.5 rounded-md shadow-sm transition-all hover:shadow-secondary/20 hover:scale-[1.01]" href="#demo">
+<span>Agendar Demo</span>
+<span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+</a>
 </div>
-<div class="h-3.5 w-px bg-slate-200"></div>
-<!-- Live status counter pill -->
-<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[11px] font-data text-slate-700">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-<span class="tabular-numbers font-medium">348</span>
-<span class="text-slate-500">Equipos Activos</span>
-</div>
-</div>
-<!-- Right User Controls -->
-<div class="flex items-center gap-4">
-<div class="flex items-center gap-2.5 text-right font-data">
-<div class="flex flex-col">
-<span class="text-[12.5px] font-medium text-slate-900 leading-none">Ing. Carlos Mendoza</span>
-<span class="text-[10px] font-mono text-slate-500 uppercase mt-1">Superintendente Biomédico</span>
-</div>
-<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-[11.5px] font-mono font-semibold text-slate-700">
-          CM
-        </div>
-</div>
-<div class="h-4 w-px bg-slate-200"></div>
-<button class="text-slate-400 hover:text-slate-700 transition-colors" title="Finalizar sesión" type="button">
-<span class="material-symbols-outlined text-[19px]">logout</span>
-</button>
 </div>
 </header>
-<!-- Scrollable Workspace -->
-<main class="flex-1 overflow-y-auto">
-<div class="max-w-[1500px] mx-auto px-7 py-8 space-y-7">
-<!-- Page Header Section -->
-<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-6">
-<div>
-<div class="flex items-center gap-2 text-[11px] font-mono font-medium tracking-wider uppercase text-teal-800">
-<span>PERSONAL Y SEGURIDAD</span>
-<span class="text-slate-300">·</span>
-<span>CONTROL OPERACIONAL DE DOTACIÓN</span>
-<span class="text-slate-300">·</span>
-<span class="text-slate-500">HABILITACIÓN RES. 3100</span>
-</div>
-<h1 class="text-2xl font-extrabold tracking-tight text-slate-950 mt-1.5 font-heading">Usuarios y Control de Accesos</h1>
-<p class="text-[13px] font-data text-slate-500 mt-0.5">Gestión de personal técnico, perfiles asistenciales y permisos de firma digital para habilitación (Res. 3100 de 2019).</p>
-</div>
-<div class="flex items-center gap-2.5 font-data">
-<button class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded text-[12.5px] text-slate-700 transition-colors shadow-xs" type="button">
-<span class="material-symbols-outlined text-[15px] text-slate-500">file_download</span>
-<span class="font-medium">Exportar Matriz de Roles</span>
-</button>
-<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#044e46] hover:bg-[#033a34] text-white rounded text-[12.5px] font-medium transition-colors shadow-xs" id="btn-open-invite" type="button">
-<span class="material-symbols-outlined text-[16px]">person_add</span>
-<span>+ Invitar Colaborador</span>
-</button>
-</div>
-</div>
-<!-- Executive KPI Ribbon -->
-<section aria-label="Métricas Principales de Personal" class="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 rounded-md divide-y md:divide-y-0 md:divide-x divide-slate-200 shadow-xs">
-<!-- KPI 1 -->
-<div class="p-5 flex flex-col justify-between">
-<div class="flex items-center justify-between">
-<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Total Usuarios</span>
-<span class="text-[10px] font-mono px-1.5 py-0.5 border border-slate-200 rounded text-slate-600 bg-slate-50">100% Dotación</span>
-</div>
-<div class="my-3">
-<div class="flex items-baseline gap-1">
-<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">28</span>
-<span class="text-[12px] font-data text-slate-400">activos</span>
-</div>
-</div>
-<div class="text-[11.5px] font-data text-teal-700 flex items-center gap-1.5">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-<span>Ingeniería Biomédica &amp; Planta</span>
-</div>
-</div>
-<!-- KPI 2 -->
-<div class="p-5 flex flex-col justify-between">
-<div class="flex items-center justify-between">
-<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Técnicos en Turno</span>
-<span class="text-[10px] font-mono px-1.5 py-0.5 border border-teal-200 rounded text-teal-700 bg-teal-50 font-medium">Activos</span>
-</div>
-<div class="my-3">
-<div class="flex items-baseline gap-1">
-<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">08</span>
-<span class="text-[12px] font-data text-slate-400">de 12 asignados</span>
-</div>
-</div>
-<div class="text-[11.5px] font-data text-slate-500">
-            Rondas en UCI y Quirófanos
-          </div>
-</div>
-<!-- KPI 3 -->
-<div class="p-5 flex flex-col justify-between">
-<div class="flex items-center justify-between">
-<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Firmas Habilitadas</span>
-<span class="text-[10px] font-mono px-1.5 py-0.5 border border-slate-200 rounded text-slate-600 bg-slate-50">85.7%</span>
-</div>
-<div class="my-3">
-<div class="flex items-baseline gap-1">
-<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">24</span>
-<span class="text-[12px] font-data text-slate-400">validadas</span>
-</div>
-</div>
-<div class="text-[11.5px] font-data text-amber-700 flex items-center gap-1.5">
-<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
-<span>1 firma en renovación técnica</span>
-</div>
-</div>
-<!-- KPI 4 -->
-<div class="p-5 flex flex-col justify-between">
-<div class="flex items-center justify-between">
-<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Roles Configurados</span>
-<span class="text-[10px] font-mono text-teal-700 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded font-medium">RBAC Auditado</span>
-</div>
-<div class="my-3">
-<div class="flex items-baseline gap-1">
-<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">04</span>
-<span class="text-sm font-normal text-slate-500 font-mono">perfiles</span>
-</div>
-</div>
-<div class="text-[11.5px] font-data text-slate-500">
-            Admin, Validador, Técnico, Auditor
-          </div>
-</div>
-</section>
-<!-- Search & Filters Strip -->
-<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3 border border-slate-200 rounded-md shadow-xs font-data">
-<div class="relative flex-1 max-w-md">
-<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-<span class="material-symbols-outlined text-[17px]">search</span>
-</div>
-<input class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-slate-400" id="user-search-input" placeholder="Buscar por colaborador, documento o Tarjeta Profesional..." type="text"/>
-</div>
-<div class="flex items-center gap-2">
-<div class="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded text-[12px]">
-<span class="text-slate-500 font-mono uppercase text-[10.5px]">Rol:</span>
-<select class="bg-transparent text-slate-800 font-medium focus:outline-none cursor-pointer pr-2 text-[12px]" id="filter-role">
-<option value="all">Todos los roles</option>
-<option value="admin">Administrador General</option>
-<option value="ing">Ingeniero Validador</option>
-<option value="tech">Técnico Asistencial</option>
-<option value="auditor">Auditor Externo</option>
-</select>
-</div>
-<div class="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded text-[12px]">
-<span class="text-slate-500 font-mono uppercase text-[10.5px]">Estado:</span>
-<select class="bg-transparent text-slate-800 font-medium focus:outline-none cursor-pointer pr-2 text-[12px]" id="filter-status">
-<option value="all">Todos</option>
-<option value="active">Activo</option>
-<option value="shift">En Turno</option>
-<option value="inactive">Inactivo</option>
-</select>
-</div>
-<button class="p-1.5 border border-slate-200 hover:bg-slate-50 text-slate-500 hover:text-slate-800 rounded transition-colors" id="btn-reset-filters" title="Restablecer filtros" type="button">
-<span class="material-symbols-outlined text-[16px]">restart_alt</span>
-</button>
-</div>
-</div>
-<!-- Main Users Table Section -->
-<section class="bg-white border border-slate-200 rounded-md shadow-xs overflow-hidden">
-<!-- Table Top Header Context -->
-<div class="px-6 py-4 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
-<div>
-<div class="flex items-center gap-2.5">
-<h2 class="text-[15px] font-semibold text-slate-950 tracking-tight font-heading">Matriz de Personal Autorizado</h2>
-<span class="px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[11px] font-mono font-medium text-slate-700 tabular-numbers">
-                5 REGISTROS VISIBLES
-              </span>
-</div>
-<p class="text-[12.5px] font-data text-slate-500 mt-0.5">Colaboradores registrados con competencia técnica para firma de actas e intervención asistencial.</p>
-</div>
-<div class="flex items-center gap-2">
-<span class="inline-flex items-center gap-1.5 text-[11.5px] font-mono text-slate-500">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-              Sede Central San Rafael
-            </span>
-</div>
-</div>
-<!-- High-Density Clinical Table -->
-<div class="w-full overflow-x-auto">
-<table class="w-full text-left border-collapse" id="users-table">
-<thead>
-<tr class="border-b border-slate-200 bg-slate-50/70 text-[10.5px] font-mono uppercase tracking-wider text-slate-600 select-none">
-<th class="py-3 px-6 font-medium">Usuario &amp; Cargo</th>
-<th class="py-3 px-4 font-medium">Tarjeta Profesional (TP)</th>
-<th class="py-3 px-4 font-medium">Rol y Alcance</th>
-<th class="py-3 px-4 font-medium">Firma Digital / Token</th>
-<th class="py-3 px-4 font-medium">Estado</th>
-<th class="py-3 px-6 text-right font-medium">Acción</th>
-</tr>
-</thead>
-<tbody class="divide-y divide-slate-100 font-data text-[13px]">
-<!-- Row 1: Carlos Mendoza -->
-<tr class="hover:bg-slate-50/60 transition-colors group" data-role="admin" data-status="active">
-<td class="py-3.5 px-6">
-<div class="flex items-center gap-3">
-<div class="h-8 w-8 rounded border border-slate-900 bg-slate-900 flex items-center justify-center text-white font-mono text-[11px] font-semibold shrink-0">
-                      CM
-                    </div>
-<div class="flex flex-col min-w-0">
-<div class="flex items-center gap-1.5">
-<span class="font-semibold text-slate-900 truncate">Ing. Carlos Mendoza</span>
-<span class="material-symbols-outlined text-[14px] text-teal-700" title="Superintendente">verified</span>
-</div>
-<span class="text-[11.5px] text-slate-600">Superintendente Biomédico</span>
-<span class="font-mono text-[10.5px] text-slate-400">c.mendoza@clinicasanrafael.com.co</span>
-</div>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<div class="flex flex-col">
-<span class="font-mono font-medium text-slate-900 text-[12.5px]">34892-COL</span>
-<span class="font-mono text-[10.5px] text-teal-700">Vigente COPNIA</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
-<span class="w-1.5 h-1.5 rounded-full bg-slate-900"></span>
-                      Administrador General
-                    </span>
-<span class="text-[11px] text-slate-500">Control Total • Gestión Infraestructura</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-teal-800">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                      SHA-256 Vigente
-                    </span>
-<span class="font-mono text-[10px] text-slate-400">Expira: Dic 2026 · ID #89F2A</span>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                    Activo
-                  </span>
-</td>
-<td class="py-3.5 px-6 text-right whitespace-nowrap">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
-<span class="material-symbols-outlined text-[16px]">edit</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
-<span class="material-symbols-outlined text-[16px]">key</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
-<span class="material-symbols-outlined text-[16px]">more_vert</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 2: David Torres -->
-<tr class="hover:bg-slate-50/60 transition-colors group" data-role="ing" data-status="active">
-<td class="py-3.5 px-6">
-<div class="flex items-center gap-3">
-<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-700 font-mono text-[11px] font-semibold shrink-0">
-                      DT
-                    </div>
-<div class="flex flex-col min-w-0">
-<span class="font-semibold text-slate-900 truncate">Ing. David Torres</span>
-<span class="text-[11.5px] text-slate-600">Ingeniero Clínico Senior</span>
-<span class="font-mono text-[10.5px] text-slate-400">d.torres@clinicasanrafael.com.co</span>
-</div>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<div class="flex flex-col">
-<span class="font-mono font-medium text-slate-900 text-[12.5px]">45892-COL</span>
-<span class="font-mono text-[10.5px] text-teal-700">Vigente COPNIA</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                      Ingeniero Validador
-                    </span>
-<span class="text-[11px] text-slate-500">Soporte Vital • Certificación Técnica</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-teal-800">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                      Token Vigente
-                    </span>
-<span class="font-mono text-[10px] text-slate-400">Expira: Oct 2025 · ID #42D1C</span>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                    Activo
-                  </span>
-</td>
-<td class="py-3.5 px-6 text-right whitespace-nowrap">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
-<span class="material-symbols-outlined text-[16px]">edit</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
-<span class="material-symbols-outlined text-[16px]">key</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
-<span class="material-symbols-outlined text-[16px]">more_vert</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 3: Andrea Gómez -->
-<tr class="hover:bg-slate-50/60 transition-colors group" data-role="tech" data-status="shift">
-<td class="py-3.5 px-6">
-<div class="flex items-center gap-3">
-<div class="h-8 w-8 rounded border border-teal-200 bg-teal-50 flex items-center justify-center text-teal-800 font-mono text-[11px] font-semibold shrink-0">
-                      AG
-                    </div>
-<div class="flex flex-col min-w-0">
-<span class="font-semibold text-slate-900 truncate">Tec. Andrea Gómez</span>
-<span class="text-[11.5px] text-slate-600">Especialista Electromedicina</span>
-<span class="font-mono text-[10.5px] text-slate-400">a.gomez@clinicasanrafael.com.co</span>
-</div>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<div class="flex flex-col">
-<span class="font-mono font-medium text-slate-900 text-[12.5px]">89012-COL</span>
-<span class="font-mono text-[10.5px] text-teal-700">Vigente CONALTEL</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
-                      Técnico de Campo
-                    </span>
-<span class="text-[11px] text-slate-500">Mantenimiento Correctivo &amp; Calibración</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-teal-800">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                      Token Vigente
-                    </span>
-<span class="font-mono text-[10px] text-slate-400">Expira: Ago 2025 · ID #73E90</span>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-300 bg-teal-100/70 text-[11px] font-mono font-semibold text-teal-900">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-700 animate-pulse"></span>
-                    En Turno
-                  </span>
-</td>
-<td class="py-3.5 px-6 text-right whitespace-nowrap">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
-<span class="material-symbols-outlined text-[16px]">edit</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
-<span class="material-symbols-outlined text-[16px]">key</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
-<span class="material-symbols-outlined text-[16px]">more_vert</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 4: Carlos Silva -->
-<tr class="hover:bg-slate-50/60 transition-colors group" data-role="tech" data-status="active">
-<td class="py-3.5 px-6">
-<div class="flex items-center gap-3">
-<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-700 font-mono text-[11px] font-semibold shrink-0">
-                      CS
-                    </div>
-<div class="flex flex-col min-w-0">
-<span class="font-semibold text-slate-900 truncate">Carlos Silva</span>
-<span class="text-[11.5px] text-slate-600">Técnico de Ronda Preventiva</span>
-<span class="font-mono text-[10.5px] text-slate-400">c.silva@clinicasanrafael.com.co</span>
-</div>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<div class="flex flex-col">
-<span class="font-mono font-medium text-slate-900 text-[12.5px]">91402-COL</span>
-<span class="font-mono text-[10.5px] text-teal-700">Vigente CONALTEL</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
-<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                      Técnico Asistencial
-                    </span>
-<span class="text-[11px] text-slate-500">Inspección de Rutina &amp; Pruebas</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-rose-700">
-<span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
-                      Pendiente Renovación
-                    </span>
-<span class="font-mono text-[10px] text-slate-400">Vencido hace 3 días • Bloqueado firma</span>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                    Activo
-                  </span>
-</td>
-<td class="py-3.5 px-6 text-right whitespace-nowrap">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
-<span class="material-symbols-outlined text-[16px]">edit</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
-<span class="material-symbols-outlined text-[16px]">key</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
-<span class="material-symbols-outlined text-[16px]">more_vert</span>
-</button>
-</div>
-</td>
-</tr>
-<!-- Row 5: Elena Restrepo -->
-<tr class="hover:bg-slate-50/60 transition-colors group" data-role="auditor" data-status="active">
-<td class="py-3.5 px-6">
-<div class="flex items-center gap-3">
-<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-700 font-mono text-[11px] font-semibold shrink-0">
-                      ER
-                    </div>
-<div class="flex flex-col min-w-0">
-<span class="font-semibold text-slate-900 truncate">Dra. Elena Restrepo</span>
-<span class="text-[11.5px] text-slate-600">Delegada Calidad &amp; Acreditación</span>
-<span class="font-mono text-[10.5px] text-slate-400">e.restrepo@auditoriabiomedica.org</span>
-</div>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<div class="flex flex-col">
-<span class="font-mono font-medium text-slate-400 text-[12.5px]">N/A</span>
-<span class="font-mono text-[10.5px] text-slate-400">No Asistencial</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
-<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-                      Auditor Habilitación
-                    </span>
-<span class="text-[11px] text-slate-500">Acceso Solo Lectura • Descarga de Actas</span>
-</div>
-</td>
-<td class="py-3.5 px-4">
-<div class="flex flex-col">
-<span class="inline-flex items-center gap-1.5 font-mono text-[11px] text-slate-500">
-<span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
-                      No Requerida
-                    </span>
-<span class="font-mono text-[10px] text-slate-400">Sin potestad técnica asistencial</span>
-</div>
-</td>
-<td class="py-3.5 px-4 whitespace-nowrap">
-<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
-<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
-                    Activo
-                  </span>
-</td>
-<td class="py-3.5 px-6 text-right whitespace-nowrap">
-<div class="flex items-center justify-end gap-1">
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
-<span class="material-symbols-outlined text-[16px]">edit</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
-<span class="material-symbols-outlined text-[16px]">key</span>
-</button>
-<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
-<span class="material-symbols-outlined text-[16px]">more_vert</span>
-</button>
-</div>
-</td>
-</tr>
-</tbody>
-</table>
-</div>
-<!-- Table Pagination & Footer -->
-<div class="px-6 py-3 bg-slate-50 border-t border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11.5px] font-mono text-slate-600">
-<div>
-            Mostrando <span class="font-semibold text-slate-900">5</span> de <span class="font-semibold text-slate-900">28</span> colaboradores registrados
-          </div>
-<div class="flex items-center gap-1">
-<button class="p-1 rounded border border-slate-200 text-slate-400 disabled:opacity-40" disabled="" type="button">
-<span class="material-symbols-outlined text-[15px]">chevron_left</span>
-</button>
-<span class="px-2 py-0.5 bg-white border border-slate-200 rounded text-slate-900 font-semibold shadow-2xs">1</span>
-<button class="px-2 py-0.5 hover:bg-slate-100 rounded text-slate-600 transition-colors" type="button">2</button>
-<button class="px-2 py-0.5 hover:bg-slate-100 rounded text-slate-600 transition-colors" type="button">3</button>
-<button class="p-1 rounded border border-slate-200 hover:bg-slate-100 text-slate-600" type="button">
-<span class="material-symbols-outlined text-[15px]">chevron_right</span>
-</button>
-</div>
-</div>
-</section>
-<!-- Security, Custody & Audit Compliance Section -->
-<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-<!-- Left: Trazabilidad de Firmas Criptográficas -->
-<div class="lg:col-span-7 bg-white border border-slate-200 rounded-md p-6 flex flex-col justify-between shadow-xs">
-<div>
-<div class="flex items-start justify-between">
-<div>
-<h2 class="text-[14.5px] font-semibold text-slate-950 tracking-tight font-heading">Trazabilidad de Firmas y Sesiones Criptográficas</h2>
-<p class="text-[12.5px] font-data text-slate-500 mt-0.5">Registro inmutable de actos técnicos vinculantes conforme a Dec. 4725 y Res. 3100.</p>
-</div>
-<a class="text-teal-700 hover:text-teal-900 font-medium font-sans text-[11.5px] flex items-center gap-1" href="#">
-<span>Ver Bitácora</span>
-<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+<main class="w-full pt-20">
+<!-- HERO SECTION: Deep Surgical Emerald Minimalist Canvas -->
+<section class="relative bg-primary text-white overflow-hidden py-16 lg:py-24 border-b border-white/5">
+<!-- Architectural subtle glow lines -->
+<div class="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#00C9A7_1px,transparent_1px)] [background-size:32px_32px]"></div>
+<div class="absolute -top-32 right-0 w-96 h-96 bg-secondary/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="max-w-7xl mx-auto px-6 relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+<!-- Editorial Value Column -->
+<div class="lg:col-span-6 flex flex-col gap-6">
+<div class="inline-flex items-center gap-2.5 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full w-fit">
+<span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+<span class="text-xs font-semibold text-slate-200 tracking-wide">Resolución 3100 de 2019 · MinSalud Colombia</span>
+</div>
+<h1 class="font-display font-bold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight leading-[1.15]">
+              Ingeniería clínica precisa. <br/>
+<span class="text-accent">Cero hallazgos</span> en su auditoría sanitaria.
+            </h1>
+<p class="text-base sm:text-lg text-slate-300 font-light leading-relaxed max-w-xl">
+              Centralice hojas de vida, cronogramas metrológicos y órdenes de trabajo con foliación criptográfica SHA-256. Diseñado exclusivamente para instituciones prestadoras de salud.
+            </p>
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+<a class="inline-flex items-center justify-center gap-2 bg-secondary hover:bg-accent text-primary font-display font-semibold text-sm px-6 py-3.5 rounded-md shadow-lg shadow-black/20 transition-all hover:scale-[1.01]" href="#demo">
+<span>Solicitar Demostración Clínica</span>
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+</a>
+<a class="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-sm px-6 py-3.5 rounded-md border border-white/10 transition-colors" href="#modulos">
+<span>Explorar Plataforma</span>
 </a>
 </div>
-<!-- Structured Event Rows -->
-<div class="mt-5 space-y-3 font-data">
-<!-- Event 1 -->
-<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start justify-between gap-3">
-<div class="flex items-start gap-2.5">
-<div class="w-7 h-7 rounded bg-teal-50 border border-teal-200 text-teal-700 flex items-center justify-center shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[15px]">draw</span>
+<!-- Sleek metric counter -->
+<div class="pt-6 border-t border-white/10 grid grid-cols-3 gap-6">
+<div>
+<p class="font-display font-bold text-2xl text-white">99.8%</p>
+<p class="text-xs text-slate-400 mt-1">Aprobación territorial</p>
 </div>
 <div>
-<div class="text-[13px] font-medium text-slate-900">
-                      Firma electrónica de Acta Preventiva #OT-2025-0891
-                    </div>
-<div class="text-[11.5px] text-slate-600 mt-0.5">
-                      Ventilador Dräger Evita V300 (EQ-00412) · Por: <strong class="text-slate-800">Ing. David Torres</strong>
-</div>
-<div class="font-mono text-[10.5px] text-slate-400 mt-1">
-                      Hash: <span class="text-slate-600">8f9e...b201a4</span> · Cert: COPNIA-45892 · IP: 192.168.10.42
-                    </div>
-</div>
-</div>
-<span class="font-mono text-[10.5px] text-slate-500 whitespace-nowrap">Hoy, 10:14 COT</span>
-</div>
-<!-- Event 2 -->
-<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start justify-between gap-3">
-<div class="flex items-start gap-2.5">
-<div class="w-7 h-7 rounded bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[15px]">lock_reset</span>
+<p class="font-display font-bold text-2xl text-white">45+ IPS</p>
+<p class="text-xs text-slate-400 mt-1">Clínicas certificadas</p>
 </div>
 <div>
-<div class="text-[13px] font-medium text-slate-900">
-                      Generación de Token OTP para calibración de desfibrilador
-                    </div>
-<div class="text-[11.5px] text-slate-600 mt-0.5">
-                      Monitor Desfibrilador Zoll R Series (EQ-00109) · Por: <strong class="text-slate-800">Tec. Andrea Gómez</strong>
-</div>
-<div class="font-mono text-[10.5px] text-slate-400 mt-1">
-                      Custodia asignada a Urgencias · Autenticación biométrica 2FA OK
-                    </div>
+<p class="font-display font-bold text-2xl text-accent">0 Glosas</p>
+<p class="text-xs text-slate-400 mt-1">En dotación biomédica</p>
 </div>
 </div>
-<span class="font-mono text-[10.5px] text-slate-500 whitespace-nowrap">Hoy, 09:32 COT</span>
 </div>
-<!-- Event 3 -->
-<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start justify-between gap-3">
-<div class="flex items-start gap-2.5">
-<div class="w-7 h-7 rounded bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
-<span class="material-symbols-outlined text-[15px]">visibility</span>
+<!-- Hero Photography with Single Refined Metric Badge -->
+<div class="lg:col-span-6 relative">
+<div class="relative rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-surface-dark">
+<img alt="Ingeniero biomédico realizando calibración metrológica y seguridad eléctrica en monitor multiparámetro" class="w-full h-[360px] sm:h-[420px] object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1V3-AfNUgXIEL7cvM8BF_dtRAs2PiEwxHz7suvgvVTo8KoxIMWLo1aQBXIwZ84AI_7lF1_XV4i9_2RE0IuaoJfsV5__1r-4GpCKd66LhExpbOYUZfjgwtH3vopuqTngDXcOXsYUhIGgN4yqahgeJKoFJHH8ynNAqX_Y6bleNXunHRi9VY-hWXYYFSQdscYrlqKOTvFT4uXPPujs4XSYKWisiGtLkhPllKG-GGDjU7oIu8EUnKBteA3fAw"/>
+<!-- Refined subtle badge -->
+<div class="absolute bottom-5 left-5 right-5 bg-surface-navy/90 backdrop-blur-md rounded-xl p-4 border border-white/10 flex items-center justify-between text-white">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-accent/20 text-accent flex items-center justify-center">
+<span class="material-symbols-outlined text-[20px]">verified</span>
 </div>
 <div>
-<div class="text-[13px] font-medium text-slate-900">
-                      Acceso de auditoría externa: Expediente Técnico Quirófano 4
-                    </div>
-<div class="text-[11.5px] text-slate-600 mt-0.5">
-                      Descarga de hojas de vida e historiales · Por: <strong class="text-slate-800">Dra. Elena Restrepo</strong>
-</div>
-<div class="font-mono text-[10.5px] text-slate-400 mt-1">
-                      Sesión de solo lectura autorizada bajo protocolo de acreditación
-                    </div>
+<p class="font-display font-semibold text-xs tracking-wide">Trazabilidad Metrológica ONAC / NIST</p>
+<p class="text-[11px] text-slate-400">Verificación de patrones de calibración en tiempo real</p>
 </div>
 </div>
-<span class="font-mono text-[10.5px] text-slate-500 whitespace-nowrap">Ayer, 16:45 COT</span>
+<span class="hidden sm:inline-block px-2.5 py-1 rounded bg-accent/15 text-accent text-[11px] font-mono font-medium">CONFORME</span>
 </div>
 </div>
 </div>
-<div class="pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-slate-600 mt-4">
-<span>Algoritmo: ECDSA P-256 + SHA-256</span>
-<span class="text-teal-700 font-medium font-sans">Cadena de custodia intacta</span>
 </div>
 </div>
-<!-- Right: Marco Normativo y Custodia Legal -->
-<div class="lg:col-span-5 bg-white border border-slate-200 rounded-md p-6 flex flex-col justify-between shadow-xs">
+</section>
+<!-- SECTION: 3 KEY CLINICAL PILLARS (Clean Slate Contrast) -->
+<section class="py-20 bg-slate-soft" id="pilares">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center max-w-2xl mx-auto mb-16">
+<span class="text-xs font-semibold text-secondary uppercase tracking-widest font-display">Rigor Técnico y Legal</span>
+<h2 class="text-2xl sm:text-3xl font-bold font-display text-heading-color mt-2 tracking-tight">
+            Elimine el riesgo sanitario en su institución
+          </h2>
+<p class="text-body-color text-sm sm:text-base mt-3 font-normal">
+            Los entes territoriales exigen certeza. Reemplace planillas dispersas por un estándar blindado punto por punto.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Pillar 1 -->
+<div class="bg-white rounded-xl p-8 border border-border-subtle shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
 <div>
-<div class="flex items-center gap-2 mb-3">
-<span class="material-symbols-outlined text-teal-700 text-[20px]">policy</span>
-<h3 class="text-[14.5px] font-semibold text-slate-950 tracking-tight font-heading">Marco Normativo y Custodia Legal</h3>
+<div class="w-12 h-12 rounded-lg bg-primary/5 text-primary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-2xl text-secondary">inventory_2</span>
 </div>
-<p class="text-[12.5px] font-data text-slate-500 mb-4">Garantías jurídicas y de habilitación para el estándar de dotación hospitalaria:</p>
-<ul class="space-y-3 font-data text-[12.5px] text-slate-700">
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-teal-700 text-[16px] mt-0.5 shrink-0">verified</span>
-<span><strong class="text-slate-900">Res. 3100 de 2019:</strong> Exige registro de TP vigente y aval técnico individual por equipo de soporte vital.</span>
+<h3 class="font-display font-semibold text-lg text-heading-color mb-2">Hojas de Vida Res. 3100</h3>
+<p class="text-sm text-body-color leading-relaxed">
+                Estructura de 28 campos normativos obligatorios: registros INVIMA, clasificación de riesgo (I a III), manuales, historiales y foliación con rótulos QR al pie de cama.
+              </p>
+</div>
+<div class="pt-6 mt-6 border-t border-slate-100 flex items-center text-xs font-medium text-primary">
+<span>Auditoría inmediata en 1 clic</span>
+<span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</div>
+</div>
+<!-- Pillar 2 -->
+<div class="bg-white rounded-xl p-8 border border-border-subtle shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-primary/5 text-primary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-2xl text-secondary">tune</span>
+</div>
+<h3 class="font-display font-semibold text-lg text-heading-color mb-2">Calibración &amp; Soporte Vital</h3>
+<p class="text-sm text-body-color leading-relaxed">
+                Monitoreo continuo de curvas de error e incertidumbre metrológica ONAC para ventiladores, desfibriladores y monitores UCI. Alertas preventivas programadas.
+              </p>
+</div>
+<div class="pt-6 mt-6 border-t border-slate-100 flex items-center text-xs font-medium text-primary">
+<span>Sin calibraciones desfasadas</span>
+<span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</div>
+</div>
+<!-- Pillar 3 -->
+<div class="bg-white rounded-xl p-8 border border-border-subtle shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 rounded-lg bg-primary/5 text-primary flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-2xl text-secondary">verified_user</span>
+</div>
+<h3 class="font-display font-semibold text-lg text-heading-color mb-2">Firma Criptográfica SHA-256</h3>
+<p class="text-sm text-body-color leading-relaxed">
+                Órdenes de trabajo digitales inmutables con verificación automática de matrículas profesionales COPNIA / CONALTEL y recepción asistencial con firma legal.
+              </p>
+</div>
+<div class="pt-6 mt-6 border-t border-slate-100 flex items-center text-xs font-medium text-primary">
+<span>Custodia probatoria total</span>
+<span class="material-symbols-outlined text-sm ml-1">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION: 4 ESSENTIAL MODULES (Rich Deep Dark Tone) -->
+<section class="py-20 bg-surface-dark text-white border-y border-white/5" id="modulos">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
+<div>
+<span class="text-xs font-semibold text-accent uppercase tracking-widest font-display">Módulos Especializados</span>
+<h2 class="text-2xl sm:text-3xl font-bold font-display text-white mt-2 tracking-tight">
+              Los 4 pilares de la ingeniería hospitalaria
+            </h2>
+</div>
+<p class="text-slate-400 text-sm max-w-md">
+            Plataforma modular construida específicamente para responder a las exigencias de inspección de MinSalud e INVIMA.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Module 1 -->
+<div class="bg-surface-navy/70 border border-white/10 rounded-xl p-8 hover:border-accent/40 transition-colors">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono font-semibold text-accent bg-accent/10 px-2.5 py-1 rounded">01 · EXPEDIENTE TÉCNICO</span>
+<span class="material-symbols-outlined text-slate-400 text-lg">description</span>
+</div>
+<h3 class="font-display font-bold text-xl text-white mb-2">Hojas de Vida &amp; Parque Biomédico</h3>
+<p class="text-slate-300 text-sm font-light leading-relaxed mb-6">
+              Ficha digital parametrizada según el Manual de Inscripción de Prestadores. Registro sanitario, tecnología predominante, código UMDNS y generación automática de etiquetas QR para lectura al pie de cama.
+            </p>
+<div class="flex items-center gap-2 text-xs text-slate-400">
+<span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+<span>28 atributos normativos preconfigurados</span>
+</div>
+</div>
+<!-- Module 2 -->
+<div class="bg-surface-navy/70 border border-white/10 rounded-xl p-8 hover:border-accent/40 transition-colors">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono font-semibold text-accent bg-accent/10 px-2.5 py-1 rounded">02 · METROLOGÍA ONAC</span>
+<span class="material-symbols-outlined text-slate-400 text-lg">speed</span>
+</div>
+<h3 class="font-display font-bold text-xl text-white mb-2">Cronograma de Calibración &amp; Preventivos</h3>
+<p class="text-slate-300 text-sm font-light leading-relaxed mb-6">
+              Control de periodicidad según criticidad clínica del fabricante. Cálculo de incertidumbre, curvas de calibración y validación estricta de vigencia de patrones del laboratorio emisor.
+            </p>
+<div class="flex items-center gap-2 text-xs text-slate-400">
+<span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+<span>Notificaciones preventivas automáticas</span>
+</div>
+</div>
+<!-- Module 3 -->
+<div class="bg-surface-navy/70 border border-white/10 rounded-xl p-8 hover:border-accent/40 transition-colors">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono font-semibold text-accent bg-accent/10 px-2.5 py-1 rounded">03 · FLUJO CLÍNICO</span>
+<span class="material-symbols-outlined text-slate-400 text-lg">medical_information</span>
+</div>
+<h3 class="font-display font-bold text-xl text-white mb-2">Órdenes de Trabajo Hospitalarias (OT)</h3>
+<p class="text-slate-300 text-sm font-light leading-relaxed mb-6">
+              Reporte asistencial expedito desde salas de cirugía y hospitalización. Flujo de diagnóstico, pruebas de seguridad eléctrica Fluke/Rigel y firma biométrica de entrega a satisfacción.
+            </p>
+<div class="flex items-center gap-2 text-xs text-slate-400">
+<span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+<span>Recepción validada por personal de salud</span>
+</div>
+</div>
+<!-- Module 4 -->
+<div class="bg-surface-navy/70 border border-white/10 rounded-xl p-8 hover:border-accent/40 transition-colors">
+<div class="flex items-center justify-between mb-4">
+<span class="text-xs font-mono font-semibold text-accent bg-accent/10 px-2.5 py-1 rounded">04 · SEGURIDAD LEGAL</span>
+<span class="material-symbols-outlined text-slate-400 text-lg">fingerprint</span>
+</div>
+<h3 class="font-display font-bold text-xl text-white mb-2">Libro Radicador &amp; Auditoría 1-Click</h3>
+<p class="text-slate-300 text-sm font-light leading-relaxed mb-6">
+              Generación del expediente técnico consolidado y foliado para los inspectores de habilitación. Sellado digital inmutable que comprueba la no adulteración de mantenimientos clínicos.
+            </p>
+<div class="flex items-center gap-2 text-xs text-slate-400">
+<span class="material-symbols-outlined text-accent text-sm">check_circle</span>
+<span>Conexión y reporte FOREIA para INVIMA</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION: EDITORIAL CASE STUDY (Magazine layout) -->
+<section class="py-20 bg-white" id="caso-exito">
+<div class="max-w-7xl mx-auto px-6">
+<div class="bg-slate-soft rounded-2xl overflow-hidden border border-border-subtle shadow-sm">
+<div class="grid grid-cols-1 lg:grid-cols-12 items-center">
+<!-- Photography (Editorial breathing room) -->
+<div class="lg:col-span-6 relative h-[380px] lg:h-[500px]">
+<img alt="Directora médica e ingeniero biomédico revisando métricas de acreditación en tablet en pasillo de hospital" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida/AEtjO1V3RWk9dal4RmIhrC6A417pjh4B5MKeficWxU_X2Tcu4BZAhy65ggFRXpRW4SMefglsWO7wRVDuE4fDb9DugQylL2kZNF730ugyPS-CwH7VO7bKSM21L2UQa7r20OLvTPBw-T6euklHwFpcYWionC4h-BPo2AzscyX4YNjjiaZC9KDeodU30tzvogigMf-GziBHcUv9wwtySy8Fn6jMqAfqAXVTbekzr89kR0jxLUSxZxuj_iGkeX0wlLA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent lg:hidden"></div>
+</div>
+<!-- Narrative / Reportage -->
+<div class="lg:col-span-6 p-8 lg:p-14 flex flex-col justify-between">
+<div>
+<div class="flex items-center gap-2 mb-4">
+<span class="text-xs font-semibold text-secondary uppercase tracking-widest font-display">Caso Clínico Real</span>
+<span class="text-slate-300">·</span>
+<span class="text-xs text-body-color font-medium">Clínica San Rafael, Bogotá</span>
+</div>
+<h3 class="text-2xl lg:text-3xl font-bold font-display text-heading-color leading-tight mb-6">
+                  "Redujimos a cero las no conformidades en nuestra visita de acreditación hospitalaria."
+                </h3>
+<blockquote class="text-base text-body-color font-normal leading-relaxed italic border-l-2 border-secondary pl-4 mb-8">
+                  "Generamos el libro radicador técnico foliado en 30 segundos ante la comisión del Ministerio. Certificamos UCI y salas de cirugía sin una sola objeción en la dotación biomédica."
+                </blockquote>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-display font-bold text-sm">
+                    CM
+                  </div>
+<div>
+<p class="font-display font-semibold text-sm text-heading-color">Ing. Carlos Mendoza</p>
+<p class="text-xs text-body-color">Director de Ingeniería Clínica Hospitalaria</p>
+</div>
+</div>
+</div>
+<!-- Hard key metric -->
+<div class="pt-8 mt-8 border-t border-slate-200 grid grid-cols-2 gap-6">
+<div>
+<p class="font-display font-bold text-3xl text-secondary">-78%</p>
+<p class="text-xs text-body-color mt-1">Tiempo en gestión documental</p>
+</div>
+<div>
+<p class="font-display font-bold text-3xl text-primary">348</p>
+<p class="text-xs text-body-color mt-1">Equipos críticos bajo custodia</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION: CLEAN SIMPLIFIED PRICING -->
+<section class="py-20 bg-slate-soft border-t border-border-subtle" id="planes">
+<div class="max-w-7xl mx-auto px-6">
+<div class="text-center max-w-2xl mx-auto mb-16">
+<span class="text-xs font-semibold text-secondary uppercase tracking-widest font-display">Planes Institucionales</span>
+<h2 class="text-2xl sm:text-3xl font-bold font-display text-heading-color mt-2 tracking-tight">
+            Tarifas claras según su parque biomédico
+          </h2>
+<p class="text-body-color text-sm sm:text-base mt-2">
+            Sin cobros adicionales por número de usuarios o sedes asistenciales.
+          </p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+<!-- Plan 1 -->
+<div class="bg-white rounded-xl p-8 border border-border-subtle shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-display font-bold text-lg text-heading-color">IPS Básica</h3>
+<span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded">Hasta 100 Equipos</span>
+</div>
+<p class="text-xs text-body-color mb-6">Centros de consulta especializada y unidades diagnósticas.</p>
+<div class="mb-6">
+<span class="font-display font-bold text-3xl text-heading-color">$480.000</span>
+<span class="text-xs text-body-color">/ mes COP</span>
+</div>
+<ul class="space-y-3 text-xs text-body-color">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Hojas de Vida Res. 3100 completas</span>
 </li>
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-teal-700 text-[16px] mt-0.5 shrink-0">verified</span>
-<span><strong class="text-slate-900">Decreto 4725 de 2005:</strong> Trazabilidad del fabricante, mantenimiento con firma y sello del responsable calificado.</span>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Cronograma preventivo automático</span>
 </li>
-<li class="flex items-start gap-2">
-<span class="material-symbols-outlined text-teal-700 text-[16px] mt-0.5 shrink-0">verified</span>
-<span><strong class="text-slate-900">Ley 527 de 1999:</strong> Validez probatoria de firmas digitales y estampas de tiempo en actas de inspección.</span>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Órdenes de trabajo y rótulos QR</span>
 </li>
 </ul>
 </div>
-<div class="mt-6 p-3 bg-slate-50 border border-slate-200/80 rounded">
-<div class="flex items-center justify-between font-mono text-[11px]">
-<span class="uppercase font-semibold text-slate-800">Certificado Institucional</span>
-<span class="text-teal-700 font-medium">Válido hasta 2027</span>
+<a class="mt-8 block text-center py-2.5 px-4 rounded-md border border-slate-300 hover:border-primary text-xs font-semibold font-display text-heading-color transition-colors" href="#demo">
+              Elegir IPS Básica
+            </a>
 </div>
-<p class="font-mono text-[10.5px] text-slate-500 mt-1 truncate">
-              Autoridad Certificadora: GSE / Andes SCD · ID: CSR-BME-99124
-            </p>
-</div>
-</div>
-</div>
-</div>
-</main>
-</div>
-<!-- Invitation Modal Dialog -->
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs hidden" id="invite-modal">
-<div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-xl border border-slate-200 relative animate-in fade-in zoom-in duration-150 font-data">
-<div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+<!-- Plan 2 (Featured Hospital Plan) -->
+<div class="bg-white rounded-xl p-8 border-2 border-secondary shadow-lg relative flex flex-col justify-between">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-secondary text-primary font-display font-bold text-[11px] uppercase tracking-wider px-3 py-0.5 rounded-full">
+              Más Recomendado
+            </div>
 <div>
-<h3 class="text-[15px] font-bold text-slate-950 font-heading">Invitar Nuevo Colaborador</h3>
-<p class="text-[12px] text-slate-500">Vincular ingeniero o técnico al módulo de habilitación</p>
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-display font-bold text-lg text-heading-color">Hospitalario</h3>
+<span class="text-xs font-semibold text-secondary bg-accent-soft px-2.5 py-1 rounded">Hasta 500 Equipos</span>
 </div>
-<button class="p-1 text-slate-400 hover:text-slate-700 rounded transition-colors" id="btn-close-modal" type="button">
-<span class="material-symbols-outlined text-[19px]">close</span>
+<p class="text-xs text-body-color mb-6">Clínicas de mediana y alta complejidad con quirófano y UCI.</p>
+<div class="mb-6">
+<span class="font-display font-bold text-3xl text-primary font-bold">$1.150.000</span>
+<span class="text-xs text-body-color">/ mes COP</span>
+</div>
+<ul class="space-y-3 text-xs text-body-color">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span class="font-medium text-heading-color">Todo lo del Plan Básico</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Módulo de Calibración e Incertidumbre ONAC</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Firma Criptográfica SHA-256 inmutable</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Verificación automática COPNIA / CONALTEL</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Migración inicial de datos incluida</span>
+</li>
+</ul>
+</div>
+<a class="mt-8 block text-center py-3 px-4 rounded-md bg-secondary hover:bg-accent text-primary font-display font-semibold text-xs uppercase tracking-wider transition-all shadow-sm" href="#demo">
+              Solicitar Plan Hospitalario
+            </a>
+</div>
+<!-- Plan 3 -->
+<div class="bg-white rounded-xl p-8 border border-border-subtle shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-display font-bold text-lg text-heading-color">Red / Alta Complejidad</h3>
+<span class="text-xs font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded">Ilimitado</span>
+</div>
+<p class="text-xs text-body-color mb-6">Conglomerados de salud multisucursal y hospitales universitarios.</p>
+<div class="mb-6">
+<span class="font-display font-bold text-3xl text-heading-color">A Medida</span>
+<span class="text-xs text-body-color">/ SLA dedicado</span>
+</div>
+<ul class="space-y-3 text-xs text-body-color">
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span class="font-medium text-heading-color">Todo lo del Plan Hospitalario</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Integración HL7, FHIR y ERP hospitalario</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Acompañamiento presencial en auditorías</span>
+</li>
+<li class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">check</span>
+<span>Soporte prioritario 24/7 con SLA de 1h</span>
+</li>
+</ul>
+</div>
+<a class="mt-8 block text-center py-2.5 px-4 rounded-md border border-slate-300 hover:border-primary text-xs font-semibold font-display text-heading-color transition-colors" href="#demo">
+              Contactar Consultoría
+            </a>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION: CLEAN CONVERSION CALL TO ACTION (Dark & Crisp) -->
+<section class="py-20 bg-primary text-white relative overflow-hidden" id="demo">
+<div class="max-w-4xl mx-auto px-6 text-center relative z-10">
+<span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-accent text-xs font-semibold tracking-wide uppercase font-display mb-6">
+<span class="w-1.5 h-1.5 rounded-full bg-accent"></span>
+          Respaldo Sanitario Inmediato
+        </span>
+<h2 class="text-3xl sm:text-4xl font-bold font-display text-white tracking-tight leading-tight mb-4">
+          Prepare su institución para la próxima auditoría sanitaria
+        </h2>
+<p class="text-slate-300 text-base max-w-xl mx-auto mb-8 font-light leading-relaxed">
+          Agende una demostración personalizada guiada por un ingeniero biomédico senior. Evaluaremos el estado actual de su inventario sin costo ni compromiso.
+        </p>
+<!-- Clean One-Touch Schedule Box (Replaced cluttered 10-field form) -->
+<div class="bg-surface-navy/90 border border-white/10 p-6 sm:p-8 rounded-2xl max-w-xl mx-auto shadow-2xl backdrop-blur-md">
+<form class="flex flex-col sm:flex-row gap-3" onsubmit="event.preventDefault(); document.getElementById('demoSuccess').classList.remove('hidden'); this.classList.add('hidden');">
+<input class="w-full bg-white/5 border border-white/15 px-4 py-3 rounded-md text-sm text-white placeholder-slate-400 focus:outline-none focus:border-accent" placeholder="Su correo institucional (@clinica.com)" required="" type="email"/>
+<button class="whitespace-nowrap bg-secondary hover:bg-accent text-primary font-display font-semibold text-xs uppercase tracking-wider px-6 py-3 rounded-md transition-all flex items-center justify-center gap-2" type="submit">
+<span>Agendar Demo</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
 </button>
-</div>
-<form class="space-y-3.5" id="invite-form">
-<div>
-<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Nombre Completo *</label>
-<input class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400" placeholder="Ej. Ing. Marcela Duarte" required="" type="text"/>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-<div>
-<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Correo Institucional *</label>
-<input class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400" placeholder="marcela.duarte@..." required="" type="email"/>
-</div>
-<div>
-<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Tarjeta Profesional (TP)</label>
-<input class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400" placeholder="Ej. 67210-COL" type="text"/>
-</div>
-</div>
-<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-<div>
-<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Rol Asignado *</label>
-<select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400">
-<option value="ing">Ingeniero Biomédico</option>
-<option value="tech">Técnico de Mantenimiento</option>
-<option value="admin">Administrador General</option>
-<option value="auditor">Auditor de Calidad</option>
-</select>
-</div>
-<div>
-<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Sede Primaria</label>
-<input class="w-full px-3 py-1.5 bg-slate-100 border border-slate-200 rounded text-[12.5px] text-slate-600 cursor-not-allowed" readonly="" type="text" value="Clínica San Rafael"/>
-</div>
-</div>
-<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start gap-2.5">
-<input checked="" class="mt-0.5 accent-[#044e46] rounded" id="check-crypto" type="checkbox"/>
-<label class="text-[12px] text-slate-700" for="check-crypto">
-          Emitir solicitud de certificado criptográfico digital de firma para actas de habilitación (Res. 3100 de 2019).
-        </label>
-</div>
-<div class="flex items-center justify-end gap-2 pt-2">
-<button class="px-3.5 py-1.5 text-[12.5px] text-slate-600 hover:text-slate-900 rounded transition-colors" id="btn-cancel-modal" type="button">
-          Cancelar
-        </button>
-<button class="px-3.5 py-1.5 bg-[#044e46] hover:bg-[#033a34] text-white text-[12.5px] font-medium rounded shadow-xs transition-colors" type="submit">
-          Enviar Invitación y Token
-        </button>
-</div>
 </form>
+<div class="hidden py-4 text-center" id="demoSuccess">
+<div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-accent/20 text-accent mb-2">
+<span class="material-symbols-outlined">check</span>
+</div>
+<p class="text-sm font-semibold text-white">Solicitud recibida</p>
+<p class="text-xs text-slate-400 mt-1">Un ingeniero clínico lo contactará en menos de 2 horas hábiles.</p>
+</div>
+<div class="mt-4 pt-4 border-t border-white/10 flex items-center justify-center gap-6 text-[11px] text-slate-400">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-accent">lock</span> Ley 1581 Habeas Data</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-xs text-accent">verified</span> Certificación ISO 27001</span>
 </div>
 </div>
-<script>
-  // Filter logic
-  const searchInput = document.getElementById('user-search-input');
-  const roleSelect = document.getElementById('filter-role');
-  const statusSelect = document.getElementById('filter-status');
-  const resetButton = document.getElementById('btn-reset-filters');
-  const tableRows = document.querySelectorAll('#users-table tbody tr');
-
-  function applyFilters() {
-    const query = (searchInput?.value || '').toLowerCase().trim();
-    const role = roleSelect?.value || 'all';
-    const status = statusSelect?.value || 'all';
-
-    tableRows.forEach(row => {
-      const text = row.textContent.toLowerCase();
-      const rowRole = row.getAttribute('data-role');
-      const rowStatus = row.getAttribute('data-status');
-
-      const matchesQuery = !query || text.includes(query);
-      const matchesRole = role === 'all' || rowRole === role;
-      const matchesStatus = status === 'all' || rowStatus === status;
-
-      if (matchesQuery && matchesRole && matchesStatus) {
-        row.style.display = '';
-      } else {
-        row.style.display = 'none';
-      }
-    });
-  }
-
-  searchInput?.addEventListener('input', applyFilters);
-  roleSelect?.addEventListener('change', applyFilters);
-  statusSelect?.addEventListener('change', applyFilters);
-
-  resetButton?.addEventListener('click', () => {
-    if (searchInput) searchInput.value = '';
-    if (roleSelect) roleSelect.value = 'all';
-    if (statusSelect) statusSelect.value = 'all';
-    applyFilters();
-  });
-
-  // Modal interactions
-  const openInviteBtn = document.getElementById('btn-open-invite');
-  const closeInviteBtn = document.getElementById('btn-close-modal');
-  const cancelInviteBtn = document.getElementById('btn-cancel-modal');
-  const inviteModal = document.getElementById('invite-modal');
-  const inviteForm = document.getElementById('invite-form');
-
-  function toggleModal(show) {
-    if (inviteModal) {
-      if (show) {
-        inviteModal.classList.remove('hidden');
-      } else {
-        inviteModal.classList.add('hidden');
-      }
-    }
-  }
-
-  openInviteBtn?.addEventListener('click', () => toggleModal(true));
-  closeInviteBtn?.addEventListener('click', () => toggleModal(false));
-  cancelInviteBtn?.addEventListener('click', () => toggleModal(false));
-
-  inviteModal?.addEventListener('click', (e) => {
-    if (e.target === inviteModal) toggleModal(false);
-  });
-
-  inviteForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    toggleModal(false);
-  });
-</script>
+</div>
+</section>
+</main>
+<!-- REFINED DARK SOUTER / FOOTER -->
+<footer class="bg-surface-dark text-slate-400 text-xs py-14 border-t border-white/5">
+<div class="max-w-7xl mx-auto px-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-white/10">
+<!-- Brand Info -->
+<div class="md:col-span-2 flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded bg-secondary flex items-center justify-center text-primary text-xs font-bold font-display">
+              C
+            </div>
+<span class="text-white font-display font-bold text-sm tracking-tight">CMMS Biomédico Salud</span>
+</div>
+<p class="text-slate-400 text-xs max-w-sm leading-relaxed">
+            Plataforma para la gestión integral del ciclo de vida de tecnología médica hospitalaria, trazabilidad metrológica y auditoría oficial en Colombia.
+          </p>
+<div class="flex items-center gap-3 pt-2 text-[11px] text-slate-500">
+<span>Resolución 3100 de 2019</span>
+<span>·</span>
+<span>Decreto 4725 de 2005</span>
+</div>
+</div>
+<!-- Links -->
+<div class="flex flex-col gap-2">
+<p class="text-white font-display font-semibold text-xs uppercase tracking-wider mb-2">Plataforma</p>
+<a class="hover:text-white transition-colors" href="#pilares">Hojas de Vida Digitales</a>
+<a class="hover:text-white transition-colors" href="#modulos">Cronograma de Calibración</a>
+<a class="hover:text-white transition-colors" href="#modulos">Órdenes de Trabajo</a>
+<a class="hover:text-white transition-colors" href="#planes">Planes y Precios</a>
+</div>
+<!-- Contact & Security -->
+<div class="flex flex-col gap-2">
+<p class="text-white font-display font-semibold text-xs uppercase tracking-wider mb-2">Soporte Técnico</p>
+<p class="text-slate-300">soporte@cmmsbiomedico.co</p>
+<p class="text-slate-400">Línea IPS: +57 (601) 390-4420</p>
+<p class="text-slate-500 mt-2 text-[11px]">Bogotá D.C. · Cobertura Nacional</p>
+</div>
+</div>
+<!-- Legal bottom bar -->
+<div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+<p>© 2025 CMMS Biomédico Salud. República de Colombia. Todos los derechos reservados.</p>
+<div class="flex items-center gap-6">
+<a class="hover:text-slate-400 transition-colors" href="#">Tratamiento de Datos Médicos</a>
+<a class="hover:text-slate-400 transition-colors" href="#">Términos del Servicio</a>
+</div>
+</div>
+</div>
+</footer>
 </body></html>

@@ -9,52 +9,52 @@ import { UiAvatarDrop } from '../shared/ui/avatar-drop';
   standalone: true,
   imports: [FormsModule, UiAvatarDrop],
   template: `
-    <header class="flex w-full items-center gap-3 border-b border-slate-200 bg-white px-4 py-2 text-sm">
+    <header class="flex w-full items-center gap-3 border-b border-white/10 bg-[#044e46] px-4 py-2 text-sm text-white">
 
       <!-- Marca / breadcrumb de módulo -->
       <div class="flex items-center gap-2 whitespace-nowrap">
-        <span class="font-bold text-slate-900">CMMS</span>
-        <span class="text-slate-300">/</span>
-        <span class="text-slate-500">{{ seccion }}</span>
+        <span class="font-bold text-white" style="font-family:'Montserrat',sans-serif">CMMS</span>
+        <span class="text-white/30">/</span>
+        <span class="text-white/70">{{ seccion }}</span>
       </div>
 
-      <span class="h-5 w-px bg-slate-200"></span>
+      <span class="h-5 w-px bg-white/20"></span>
 
       <!-- Sede activa -->
       <div class="flex items-center gap-2 whitespace-nowrap">
         <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" class="text-slate-400">
+             stroke-linecap="round" stroke-linejoin="round" class="text-white/60">
           <rect x="4" y="3" width="16" height="18" rx="1" />
           <path d="M9 21v-4h6v4M9 9h1M14 9h1M9 13h1M14 13h1" />
         </svg>
-        <span class="font-semibold text-slate-800">{{ sede }}</span>
-        <span class="text-slate-300">•</span>
-        <span class="text-slate-500">{{ subsede }}</span>
+        <span class="font-semibold text-white">{{ sede }}</span>
+        <span class="text-white/30">•</span>
+        <span class="text-white/60">{{ subsede }}</span>
       </div>
 
       <!-- Badge de equipos activos -->
-      <span class="flex items-center gap-1.5 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-slate-600">
-        <span class="h-1.5 w-1.5 rounded-full bg-teal-600"></span>
+      <span class="flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-white border border-white/10 backdrop-blur-sm">
+        <span class="h-1.5 w-1.5 rounded-full bg-white"></span>
         {{ equiposActivos }} Equipos Activos
       </span>
 
       <!-- Usuario con menú desplegable · badge -->
       <div class="relative ml-auto group">
-        <button type="button" class="flex items-center gap-3 rounded-md border border-slate-300 bg-slate-100 px-3 py-1.5 shadow-sm transition-colors hover:bg-white" aria-haspopup="menu">
+        <button type="button" class="flex items-center gap-3 rounded-md border border-white/10 bg-white/10 px-3 py-1.5 shadow-sm backdrop-blur-sm transition-colors hover:bg-white/15" aria-haspopup="menu">
           <div class="text-right leading-tight">
-            <div class="font-semibold text-slate-800">{{ usuario }}</div>
-            <div class="text-[11px] font-semibold uppercase tracking-wide text-teal-700">{{ rol }}</div>
+            <div class="font-semibold text-white">{{ usuario }}</div>
+            <div class="text-[11px] font-semibold uppercase tracking-wide text-white/70">{{ rol }}</div>
           </div>
           @if (auth.avatarUrl(); as url) {
-            <img [src]="url" alt="Avatar" class="h-9 w-9 rounded-full object-cover ring-2 ring-teal-100" />
+            <img [src]="url" alt="Avatar" class="h-9 w-9 rounded-full object-cover ring-2 ring-white/10" />
           } @else {
-            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-teal-700 text-sm font-semibold text-white" style="font-family:'Montserrat',sans-serif">
+            <div class="flex h-9 w-9 items-center justify-center rounded-full bg-white/15 text-sm font-semibold text-white ring-2 ring-white/10" style="font-family:'Montserrat',sans-serif">
               {{ iniciales() }}
             </div>
           }
         </button>
 
-        <div class="invisible absolute right-0 top-full z-50 w-60 translate-y-1 pt-1 opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100" role="menu">
+        <div class="invisible absolute right-0 top-full z-50 w-60 translate-y-3 pt-4 opacity-0 transition-all group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100" role="menu" style="max-width: calc(100vw - 1rem)">
           <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-lg">
             <div class="flex items-center gap-3 border-b border-slate-100 px-4 py-3">
               @if (auth.avatarUrl(); as url) {
