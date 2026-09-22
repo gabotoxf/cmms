@@ -104,18 +104,33 @@ public class AuthService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado"));
     }
 
-    /** Avatar: solo imágenes de hasta 2 MB. */
+    /** Avatar: solo imágenes de hasta 2 MB. El tipo se infiere de la extensión si el cliente no lo manda. */
     @Transactional
-    public void guardarAvatar(Usuario usuario, String contentType, byte[] bytes) {
-        if (contentType == null || !contentType.startsWith("image/")) {
+    public void guardarAvatar(Usuario usuario, String contentType, String nombreArchivo, byte[] bytes) {
+        String tipo = (contentType != null && contentType.startsWith("image/")) ? contentType : tipoPorExtension(nombreArchivo);
+        if (tipo == null) {
             throw new ReglasNegocioException("El avatar debe ser una imagen");
         }
         if (bytes == null || bytes.length == 0 || bytes.length > 2L * 1024 * 1024) {
             throw new ReglasNegocioException("El avatar debe pesar entre 1 byte y 2 MB");
         }
         usuario.setAvatar(bytes);
-        usuario.setAvatarTipo(contentType);
+        usuario.setAvatarTipo(tipo);
         usuarioRepository.save(usuario);
+    }
+
+    private String tipoPorExtension(String nombreArchivo) {
+        if (nombreArchivo == null) return null;
+        String ext = nombreArchivo.contains(".")
+                ? nombreArchivo.substring(nombreArchivo.lastIndexOf('.') + 1).toLowerCase()
+                : "";
+        return switch (ext) {
+            case "jpg", "jpeg" -> "image/jpeg";
+            case "png" -> "image/png";
+            case "webp" -> "image/webp";
+            case "gif" -> "image/gif";
+            default -> null;
+        };
     }
 
     @Transactional

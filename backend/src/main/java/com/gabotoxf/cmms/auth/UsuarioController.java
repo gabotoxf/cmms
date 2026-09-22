@@ -80,7 +80,7 @@ public class UsuarioController {
     public ResponseEntity<Void> subirAvatar(@PathVariable Long id,
                                             @RequestParam("archivo") MultipartFile archivo) throws IOException {
         authService.guardarAvatar(authService.buscarPorId(id),
-                archivo.getContentType(), archivo.getBytes());
+                archivo.getContentType(), archivo.getOriginalFilename(), archivo.getBytes());
         return ResponseEntity.noContent().build();
     }
 }

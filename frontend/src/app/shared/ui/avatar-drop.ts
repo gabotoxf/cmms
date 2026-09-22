@@ -87,24 +87,38 @@ export class UiAvatarDrop {
 
   private async procesar(f: File | null): Promise<void> {
     if (!f) return;
-    if (!f.type.startsWith('image/')) {
+    const tipo = f.type || this.tipoPorExtension(f.name);
+    if (!tipo.startsWith('image/')) {
       this.errorMsg.set('El archivo debe ser una imagen');
       return;
     }
+    const normalizado = f.type ? f : new File([f], f.name, { type: tipo });
     this.errorMsg.set(null);
-    if (f.size <= MAX_AVATAR_BYTES) {
-      this.fijar(f);
+    if (normalizado.size <= MAX_AVATAR_BYTES) {
+      this.fijar(normalizado);
       return;
     }
     this.comprimiendo.set(true);
     try {
-      const comprimida = await this.comprimir(f);
+      const comprimida = await this.comprimir(normalizado);
       this.fijar(comprimida);
       this.toast.info('Imagen optimizada', 'Se comprimió para cumplir el límite de 2 MB');
     } catch {
       this.errorMsg.set('No se pudo procesar la imagen, prueba con otra');
     } finally {
       this.comprimiendo.set(false);
+    }
+  }
+
+  private tipoPorExtension(nombre: string): string {
+    const ext = nombre.includes('.') ? nombre.slice(nombre.lastIndexOf('.') + 1).toLowerCase() : '';
+    switch (ext) {
+      case 'jpg':
+      case 'jpeg': return 'image/jpeg';
+      case 'png': return 'image/png';
+      case 'webp': return 'image/webp';
+      case 'gif': return 'image/gif';
+      default: return '';
     }
   }
 

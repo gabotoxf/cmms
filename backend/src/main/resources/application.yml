@@ -68,10 +68,9 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
 
-# JWT + cookies de desarrollo pueden agrandar las cabeceras (defecto Tomcat: 8 KB).
+# JWT + cookies de desarrollo pueden agrandar las cabeceras (defecto: 8 KB).
 server:
-  tomcat:
-    max-http-header-size: 32KB
+  max-http-header-size: 32KB
 
 # Fase 8: límites de la carga masiva de equipos (evita subir archivos enormes y colgar la app)
 cmms:

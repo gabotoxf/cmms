@@ -64,7 +64,7 @@ public class AuthController {
     public ResponseEntity<Void> subirMiAvatar(@RequestParam("archivo") MultipartFile archivo,
                                               @AuthenticationPrincipal UserDetails userDetails) throws IOException {
         authService.guardarAvatar(authService.buscarPorEmail(userDetails.getUsername()),
-                archivo.getContentType(), archivo.getBytes());
+                archivo.getContentType(), archivo.getOriginalFilename(), archivo.getBytes());
         return ResponseEntity.noContent().build();
     }
 
