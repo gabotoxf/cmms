@@ -1,0 +1,303 @@
+@import "tailwindcss";
+
+@theme {
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
+
+/* Tokens base shadcn (los usan ui-btn, ui-card, ui-badge, ui-input).
+   No borrar: el sistema "Clinical Precision" de abajo convive con estos. */
+:root {
+  --background: oklch(0.98 0.005 247);
+  --foreground: oklch(0.22 0.04 264);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.04 264);
+  --primary: oklch(0.51 0.13 182);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.95 0.01 247);
+  --secondary-foreground: oklch(0.32 0.05 264);
+  --muted: oklch(0.95 0.01 247);
+  --muted-foreground: oklch(0.5 0.04 264);
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0.9 0.015 247);
+  --input: oklch(0.9 0.015 247);
+  --ring: oklch(0.51 0.13 182);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+h1, h2, h3 {
+  font-family: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* ============================================================
+   DESIGN TOKENS — "Clinical Precision"
+   Sistema de color: Teal (Primary/Secondary) + Slate (Tertiary/Neutral)
+   Tipografía: Montserrat / Roboto / JetBrains Mono
+   ============================================================ */
+
+:root {
+
+  /* ----------------------------------------------------------
+     1. COLOR — Primary (Teal) — escala completa
+     Base: #0D9488
+  ---------------------------------------------------------- */
+  --color-primary-50:  #f0fdfa;
+  --color-primary-100: #ccfbf1;
+  --color-primary-200: #99f6e4;
+  --color-primary-300: #5eead4;
+  --color-primary-400: #2dd4bf;
+  --color-primary-500: #14b8a6;
+  --color-primary-600: #0d9488; /* Primary base */
+  --color-primary-700: #0f766e; /* = Secondary base */
+  --color-primary-800: #115e59;
+  --color-primary-900: #134e4a;
+  --color-primary-950: #042f2e;
+
+  /* ----------------------------------------------------------
+     2. COLOR — Secondary (Teal oscuro)
+     Base: #0F766E
+  ---------------------------------------------------------- */
+  --color-secondary-50:  #f0fdfa;
+  --color-secondary-100: #ccfbf1;
+  --color-secondary-200: #99f6e4;
+  --color-secondary-300: #5eead4;
+  --color-secondary-400: #2dd4bf;
+  --color-secondary-500: #14b8a6;
+  --color-secondary-600: #0d9488;
+  --color-secondary-700: #0f766e; /* Secondary base */
+  --color-secondary-800: #115e59;
+  --color-secondary-900: #134e4a;
+  --color-secondary-950: #042f2e;
+
+  /* ----------------------------------------------------------
+     3. COLOR — Tertiary (Slate medio)
+     Base: #64748B
+  ---------------------------------------------------------- */
+  --color-tertiary-50:  #f8fafc;
+  --color-tertiary-100: #f1f5f9;
+  --color-tertiary-200: #e2e8f0;
+  --color-tertiary-300: #cbd5e1;
+  --color-tertiary-400: #94a3b8;
+  --color-tertiary-500: #64748b; /* Tertiary base */
+  --color-tertiary-600: #475569;
+  --color-tertiary-700: #334155;
+  --color-tertiary-800: #1e293b;
+  --color-tertiary-900: #0f172a;
+  --color-tertiary-950: #020617;
+
+  /* ----------------------------------------------------------
+     4. COLOR — Neutral (Slate oscuro / fondo institucional)
+     Base: #0F172A
+  ---------------------------------------------------------- */
+  --color-neutral-50:  #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a; /* Neutral base */
+  --color-neutral-950: #020617;
+
+  /* ----------------------------------------------------------
+     5. COLOR — Alias semánticos
+  ---------------------------------------------------------- */
+  --color-primary:        var(--color-primary-600);
+  --color-primary-hover:  var(--color-primary-700);
+  --color-secondary:      var(--color-secondary-700);
+  --color-tertiary:       var(--color-tertiary-500);
+  --color-neutral:        var(--color-neutral-900);
+
+  --color-bg-surface:        var(--color-neutral-50);
+  --color-bg-canvas:         #ffffff;
+  --color-bg-inverted:       var(--color-neutral-900);
+
+  --color-text-primary:      var(--color-neutral-900);
+  --color-text-secondary:    var(--color-tertiary-500);
+  --color-text-muted:        var(--color-tertiary-400);
+  --color-text-on-primary:   #ffffff;
+  --color-text-on-inverted:  #ffffff;
+
+  --color-border-default:    var(--color-tertiary-200);
+  --color-border-strong:     var(--color-tertiary-400);
+
+  /* Estados de botones (según mockup: Primary / Secondary / Inverted / Outlined) */
+  --btn-primary-bg:        var(--color-primary-600);
+  --btn-primary-text:      #ffffff;
+  --btn-primary-bg-hover:  var(--color-primary-700);
+
+  --btn-secondary-bg:      transparent;
+  --btn-secondary-text:    var(--color-primary-600);
+  --btn-secondary-border:  var(--color-primary-600);
+
+  --btn-inverted-bg:       var(--color-neutral-900);
+  --btn-inverted-text:     #ffffff;
+
+  --btn-outlined-bg:       transparent;
+  --btn-outlined-text:     var(--color-tertiary-600);
+  --btn-outlined-border:   var(--color-tertiary-300);
+
+  /* ----------------------------------------------------------
+     6. TIPOGRAFÍA — Familias
+  ---------------------------------------------------------- */
+  --font-heading: 'Montserrat', 'Helvetica Neue', Arial, sans-serif;
+  --font-body:    'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+  /* Pesos */
+  --font-weight-heading-semibold: 600;
+  --font-weight-heading-bold:     700;
+  --font-weight-body-regular:     400;
+  --font-weight-body-medium:      500;
+  --font-weight-label-medium:     500;
+
+  /* Tracking (interletrado) */
+  --tracking-tight:  -0.02em; /* usar en Headline/KPIs */
+  --tracking-normal: 0em;
+  --tracking-wide:   0.02em; /* usar en Label/microdatos JetBrains Mono */
+
+  /* Escala tipográfica */
+  --font-size-display: 2.5rem;   /* KPIs grandes: 18, 348, 94.2% */
+  --font-size-h1:       1.75rem; /* Título principal de pantalla */
+  --font-size-h2:       1.25rem; /* Encabezados de sección/módulo */
+  --font-size-body:     0.9375rem; /* 15px */
+  --font-size-body-sm:  0.8125rem; /* 13px */
+  --font-size-label:    0.8125rem;
+  --font-size-mono:     0.8125rem; /* códigos, timestamps */
+
+  --line-height-heading: 1.2;
+  --line-height-body:    1.5;
+
+  /* Cifras tabulares (JetBrains Mono / codigos INVIMA, timestamps) */
+  --font-feature-tabular: 'tnum' 1, 'lnum' 1;
+
+  /* ----------------------------------------------------------
+     7. RADIOS Y SOMBRAS (inferidos del mockup)
+  ---------------------------------------------------------- */
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  16px;
+  --radius-full: 9999px;
+
+  --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.08), 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-elevated: 0 8px 24px rgba(15, 23, 42, 0.12);
+}
+
+/* ============================================================
+   Clases utilitarias de ejemplo
+   ============================================================ */
+
+.heading {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading-bold);
+  letter-spacing: var(--tracking-tight);
+  line-height: var(--line-height-heading);
+  color: var(--color-text-primary);
+}
+
+.kpi-value {
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading-bold);
+  font-size: var(--font-size-display);
+  letter-spacing: var(--tracking-tight);
+  color: var(--color-primary);
+}
+
+.body-text {
+  font-family: var(--font-body);
+  font-weight: var(--font-weight-body-regular);
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+  color: var(--color-text-secondary);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-label);
+  letter-spacing: var(--tracking-wide);
+  color: var(--color-text-muted);
+}
+
+.mono-data {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--font-size-mono);
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-weight: var(--font-weight-heading-semibold);
+}
+.btn-primary:hover { background: var(--btn-primary-bg-hover); }
+
+.btn-secondary {
+  background: var(--btn-secondary-bg);
+  color: var(--btn-secondary-text);
+  border: 1px solid var(--btn-secondary-border);
+  border-radius: var(--radius-sm);
+}
+
+.btn-inverted {
+  background: var(--btn-inverted-bg);
+  color: var(--btn-inverted-text);
+  border: none;
+  border-radius: var(--radius-sm);
+}
+
+.btn-outlined {
+  background: var(--btn-outlined-bg);
+  color: var(--btn-outlined-text);
+  border: 1px solid var(--btn-outlined-border);
+  border-radius: var(--radius-sm);
+}
+
+.card {
+  background: var(--color-bg-canvas);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 6px;
+}

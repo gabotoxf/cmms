@@ -1,0 +1,57 @@
+# Levanta toda la pila con un comando:
+#   docker compose --env-file .env.properties up -d --build
+#
+# Estructura del monorepo: la API Spring Boot vive en ./backend (ahí está su
+# Dockerfile) y el frontend en ./frontend. Este compose orquesta desde la raíz.
+#
+# Las credenciales NUNCA viven en este archivo: se leen de .env.properties
+# (git-ignorado). El contenedor de Postgres se inicializa con esa misma
+# contraseña, así siempre coincide con la que usa la app.
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: cmms-postgres
+    environment:
+      POSTGRES_DB: cmms
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      # En el host expone 5433 para no chocar con un Postgres local ya instalado;
+      # dentro de la red de compose la app lo alcanza como "postgres:5432".
+      - "${DB_HOST_PORT:-5433}:5432"
+    volumes:
+      # Postgres 18+: el mount va en /var/lib/postgresql (la data vive en un subdirectorio
+      # y pg_upgrade funciona sin problemas de límites de mount point).
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d cmms"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    build: ./backend
+    container_name: cmms-app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_URL: jdbc:postgresql://postgres:5432/cmms
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      APP_CORS_ORIGINS: ${APP_CORS_ORIGINS:-http://localhost:4200}
+      # Fase 5: correo opcional. Sin MAIL_HOST la app funciona igual (notificaciones a log).
+      MAIL_HOST: ${MAIL_HOST:-}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      MAIL_REMITENTE: ${MAIL_REMITENTE:-cmms@localhost}
+      APP_ALERTAS_DESTINATARIO: ${APP_ALERTAS_DESTINATARIO:-}
+    ports:
+      - "8080:8080"
+
+volumes:
+  pgdata:

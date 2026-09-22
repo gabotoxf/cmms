@@ -1,0 +1,9 @@
+target/
+.idea/
+.vscode/
+.git/
+.env.properties
+*.log
+/tmp/
+HELP.md
+e71c8affeH4zJU2ibPVBBKQ

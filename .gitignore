@@ -31,3 +31,18 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Variables locales (credenciales) ###
+.env.properties
+.reloadtrigger
+/tmp/
+
+### Frontend (Vite/Node) ###
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+frontend/.env.*.local
+npm-debug.log*
+
+e71c8affeH4zJU2ibPVBBKQ
+

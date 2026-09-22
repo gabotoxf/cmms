@@ -1,0 +1,10 @@
+# Perfil de producción: sin logs SQL, JWT y BD obligatoriamente por variables de entorno.
+# JWT_SECRET y DB_* DEBEN estar definidos; la app no arranca sin ellos.
+spring:
+  jpa:
+    show-sql: false
+
+app:
+  jwt:
+    # Sin default a propósito: si no está definida, el contexto falla al arrancar.
+    secret: ${JWT_SECRET}
