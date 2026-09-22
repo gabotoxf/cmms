@@ -8,6 +8,21 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/login/login').then(m => m.Login)
   },
   {
+    path: 'registro',
+    title: 'Solicitar acceso — CMMS',
+    loadComponent: () => import('./pages/registro/registro').then(m => m.Registro)
+  },
+  {
+    path: 'recuperar',
+    title: 'Recuperar contraseña — CMMS',
+    loadComponent: () => import('./pages/recuperar/recuperar').then(m => m.Recuperar)
+  },
+  {
+    path: 'restablecer',
+    title: 'Restablecer contraseña — CMMS',
+    loadComponent: () => import('./pages/restablecer/restablecer').then(m => m.Restablecer)
+  },
+  {
     path: '',
     canActivate: [authGuard],
     loadComponent: () => import('./layout/layout').then(m => m.Layout),

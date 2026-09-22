@@ -5,8 +5,12 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-/** Edición total de un usuario por el ADMIN (el email no se toca nunca). */
+/** Edición total de un usuario por el ADMIN (ahora incluye email). */
 public record UsuarioAdminRequest(
+
+        @NotBlank(message = "El correo es obligatorio")
+        @jakarta.validation.constraints.Email(message = "El correo no es válido")
+        String email,
 
         @NotBlank(message = "El nombre es obligatorio")
         String nombre,

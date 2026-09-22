@@ -7,7 +7,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, NgTemplateOutlet],
   template: `
-    <aside class="flex w-60 shrink-0 flex-col gap-6 border-r border-slate-200 bg-white p-4">
+    <aside class="flex w-70 shrink-0 flex-col gap-6 border-r border-slate-200 bg-white p-4">
       <!-- Logo / marca -->
       <div class="flex items-center gap-3 px-1">
         <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-700 text-white">

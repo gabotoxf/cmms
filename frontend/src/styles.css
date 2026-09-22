@@ -59,6 +59,13 @@ a {
   text-decoration: none;
 }
 
+button, [role="button"] {
+  cursor: pointer;
+}
+button:disabled, [role="button"][aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
 /* ============================================================
    DESIGN TOKENS — "Clinical Precision"
    Sistema de color: Teal (Primary/Secondary) + Slate (Tertiary/Neutral)

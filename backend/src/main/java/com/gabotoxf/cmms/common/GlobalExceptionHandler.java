@@ -18,6 +18,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.util.HashMap;
@@ -110,6 +112,18 @@ public class GlobalExceptionHandler {
                 "El parámetro '" + ex.getName() + "' tiene un valor no válido");
         pd.setTitle("Parámetro inválido");
         return pd;
+    }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ProblemDetail manejarParteFaltante(MissingServletRequestPartException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                "Falta el archivo: el campo debe llamarse 'archivo' y enviarse como multipart/form-data");
+    }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ProblemDetail manejarArchivoMuyGrande(MaxUploadSizeExceededException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
+                "El archivo supera el límite permitido (máx. 10 MB en el servidor, 2 MB para avatar)");
     }
 
     /** URL inexistente: antes caía en el handler genérico y devolvía 500. */

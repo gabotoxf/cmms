@@ -59,8 +59,12 @@ app:
     job-cron: ${APP_ALERTAS_JOB_CRON:0 15 2 * * *}
     remitente: ${MAIL_REMITENTE:cmms@localhost}
   cors:
-    origins: ${APP_CORS_ORIGINS:http://localhost:4200}
+    origins: ${APP_CORS_ORIGINS:http://localhost:4200,http://127.0.0.1:4200}
   page-size-max: ${APP_PAGE_SIZE_MAX:100}
+  avatar:
+    dir: ${APP_AVATAR_DIR:./uploads/avatars}
+  frontend:
+    url: ${APP_FRONTEND_URL:http://127.0.0.1:4200}
 
 springdoc:
   swagger-ui:
@@ -68,9 +72,13 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
 
-# JWT + cookies de desarrollo pueden agrandar las cabeceras (defecto: 8 KB).
+# JWT + cookies/devtools/proxy pueden agrandar cabeceras (defecto: 8 KB).
+# El PUT multipart del avatar fallaba con 32KB incluso con 64KB en algunos navegadores
+# que envían cookies grandes, así que se deja en 128KB definitivo.
 server:
-  max-http-header-size: 32KB
+  max-http-header-size: 128KB
+  tomcat:
+    max-swallow-size: 10MB
 
 # Fase 8: límites de la carga masiva de equipos (evita subir archivos enormes y colgar la app)
 cmms:

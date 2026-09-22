@@ -75,16 +75,33 @@ public class AuthController {
         return ResponseEntity.noContent().build();
     }
 
+    @PostMapping("/recuperar")
+    public ResponseEntity<Void> recuperar(@RequestBody java.util.Map<String, String> body) {
+        String email = body.get("email");
+        if (email != null && !email.isBlank()) authService.solicitarRecuperacion(email);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/restablecer")
+    public ResponseEntity<Void> restablecer(@RequestBody java.util.Map<String, String> body) {
+        String token = body.get("token");
+        String password = body.get("password");
+        authService.restablecerPassword(token, password);
+        return ResponseEntity.ok().build();
+    }
+
     private ResponseEntity<byte[]> avatarDe(Usuario usuario) {
-        if (usuario.getAvatar() == null || usuario.getAvatar().length == 0) {
+        byte[] bytes = authService.cargarAvatarBytes(usuario);
+        String tipoStr = authService.resolverAvatarTipo(usuario);
+        if (bytes == null || bytes.length == 0) {
             return ResponseEntity.noContent().build();
         }
         MediaType tipo;
         try {
-            tipo = MediaType.parseMediaType(usuario.getAvatarTipo());
+            tipo = MediaType.parseMediaType(tipoStr);
         } catch (Exception e) {
             tipo = MediaType.APPLICATION_OCTET_STREAM;
         }
-        return ResponseEntity.ok().contentType(tipo).body(usuario.getAvatar());
+        return ResponseEntity.ok().contentType(tipo).body(bytes);
     }
 }

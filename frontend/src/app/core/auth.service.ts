@@ -57,6 +57,14 @@ export class AuthService {
     return this.http.post<TokenResponse>('/api/auth/registro', req);
   }
 
+  recuperar(email: string) {
+    return this.http.post<void>('/api/auth/recuperar', { email });
+  }
+
+  restablecer(token: string, password: string) {
+    return this.http.post<void>('/api/auth/restablecer', { token, password });
+  }
+
   actualizarPerfil(req: { nombre: string; apellido: string; celular?: string; passwordActual?: string; passwordNueva?: string }) {
     return this.http.patch<TokenResponse>('/api/auth/perfil', req)
       .pipe(tap(respuesta => this.establecerSesion(respuesta)));
@@ -81,7 +89,7 @@ export class AuthService {
 
   subirMiAvatar(archivo: File) {
     const form = new FormData();
-    form.append('archivo', archivo);
+    form.append('archivo', archivo, archivo.name);
     return this.http.put<void>('/api/auth/perfil/avatar', form)
       .pipe(tap(() => this.cargarMiAvatar()));
   }

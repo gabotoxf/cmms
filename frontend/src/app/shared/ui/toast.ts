@@ -58,7 +58,7 @@ export class ToastService {
   selector: 'app-toasts',
   standalone: true,
   template: `
-    <div class="pointer-events-none fixed right-4 top-4 z-[100] flex w-80 flex-col gap-2" aria-live="polite">
+    <div class="pointer-events-none fixed right-4 z-[100] flex w-80 flex-col gap-2" style="top: calc(3.5rem + 0.75rem)" aria-live="polite">
       @for (t of toast.lista(); track t.id) {
         <div class="pointer-events-auto flex items-start gap-2.5 overflow-hidden rounded-xl border border-slate-200 bg-white py-3 pl-3 pr-2 shadow-lg"
              [class.toast-in]="!t.saliendo" [class.toast-out]="t.saliendo">

@@ -27,15 +27,18 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) {
-        if (usuarioRepository.count() > 0) {
-            return;
+        if (usuarioRepository.count() == 0) {
+            usuarioRepository.save(new Usuario("admin@cmms.local", passwordEncoder.encode("admin123"), Rol.ADMIN, "Admin", "Sistema", "3000000001"));
+            usuarioRepository.save(new Usuario("ingeniero@cmms.local", passwordEncoder.encode("ingeniero123"), Rol.INGENIERO, "Ingeniero", "Demo", "3000000002"));
+            usuarioRepository.save(new Usuario("tecnico@cmms.local", passwordEncoder.encode("tecnico123"), Rol.TECNICO, "Técnico", "Demo", "3000000003"));
+            usuarioRepository.save(new Usuario("auditor@cmms.local", passwordEncoder.encode("auditor123"), Rol.AUDITOR, "Auditor", "Demo", "3000000004"));
+            log.info("Usuarios de demo creados: admin@cmms.local / admin123 (y ingeniero, tecnico, auditor @cmms.local)");
         }
-
-        usuarioRepository.save(new Usuario("admin@cmms.local", passwordEncoder.encode("admin123"), Rol.ADMIN, "Admin", "Sistema", "3000000001"));
-        usuarioRepository.save(new Usuario("ingeniero@cmms.local", passwordEncoder.encode("ingeniero123"), Rol.INGENIERO, "Ingeniero", "Demo", "3000000002"));
-        usuarioRepository.save(new Usuario("tecnico@cmms.local", passwordEncoder.encode("tecnico123"), Rol.TECNICO, "Técnico", "Demo", "3000000003"));
-        usuarioRepository.save(new Usuario("auditor@cmms.local", passwordEncoder.encode("auditor123"), Rol.AUDITOR, "Auditor", "Demo", "3000000004"));
-
-        log.info("Usuarios de demo creados: admin@cmms.local / admin123 (y ingeniero, tecnico, auditor @cmms.local)");
+        // Demo para presentaciones — siempre asegurado, da muy buena impresión
+        if (usuarioRepository.findByEmail("demo@cmms.com").isEmpty()) {
+            Usuario demo = new Usuario("demo@cmms.com", passwordEncoder.encode("demo123"), Rol.ADMIN, "Demo", "CMMS", "3000000010");
+            usuarioRepository.save(demo);
+            log.info("Usuario DEMO creado: demo@cmms.com / demo123 (ADMIN · Demo CMMS) — listo para presentaciones");
+        }
     }
 }

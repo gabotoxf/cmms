@@ -62,16 +62,18 @@ public class UsuarioController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<byte[]> avatar(@PathVariable Long id) {
         Usuario usuario = authService.buscarPorId(id);
-        if (usuario.getAvatar() == null || usuario.getAvatar().length == 0) {
+        byte[] bytes = authService.cargarAvatarBytes(usuario);
+        String tipoStr = authService.resolverAvatarTipo(usuario);
+        if (bytes == null || bytes.length == 0) {
             return ResponseEntity.noContent().build();
         }
         MediaType tipo;
         try {
-            tipo = MediaType.parseMediaType(usuario.getAvatarTipo());
+            tipo = MediaType.parseMediaType(tipoStr);
         } catch (Exception e) {
             tipo = MediaType.APPLICATION_OCTET_STREAM;
         }
-        return ResponseEntity.ok().contentType(tipo).body(usuario.getAvatar());
+        return ResponseEntity.ok().contentType(tipo).body(bytes);
     }
 
     @PutMapping(value = "/{id}/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

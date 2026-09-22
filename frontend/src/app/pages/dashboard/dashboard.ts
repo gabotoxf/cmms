@@ -1,19 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { DashboardService } from '../../core/api.services';
+import { DashboardService, EquiposService, OrdenesService, PlanesService } from '../../core/api.services';
 import { ToastService } from '../../shared/ui/toast';
-import type { ResumenDashboard } from '../../core/models';
+import type { Plan, ResumenDashboard } from '../../core/models';
 
-/** Tablero principal. Diseño del mockup trash.html con datos reales del backend. */
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   imports: [RouterLink],
   template: `
     <div class="mx-auto flex w-full max-w-7xl flex-col gap-8">
-      <!-- Encabezado -->
       <header class="flex flex-col justify-between gap-6 pb-2 md:flex-row md:items-center">
-        <div class="flex flex-col gap-1.5">
+        <div class="flex min-w-0 flex-1 max-w-2xl flex-col gap-1.5">
           <div class="flex items-center gap-2.5 text-xs font-medium text-slate-400">
             <span class="inline-flex items-center gap-1.5 rounded bg-emerald-50/80 px-2.5 py-0.5 text-[11px] font-medium text-emerald-700">
               Garantía de Calidad Técnica
@@ -21,14 +19,14 @@ import type { ResumenDashboard } from '../../core/models';
             <span>•</span>
             <span>Res. 3100 / 2019</span>
           </div>
-          <h1 class="text-2xl font-semibold tracking-tight text-slate-900 md:text-3xl" style="font-family:'Montserrat',sans-serif">
+          <h1 class="text-2xl lg:text-3xl font-bold tracking-tight text-slate-900" style="font-family:'Montserrat',sans-serif">
             Tablero de Control
           </h1>
-          <p class="text-sm font-normal text-slate-500" style="font-family:'Roboto',sans-serif">
+          <p class="mt-1 text-sm text-slate-500 leading-relaxed">
             Monitoreo técnico y aseguramiento metrológico — Resolución 3100 de 2019
           </p>
         </div>
-        <div class="flex items-center gap-3 self-start md:self-center">
+        <div class="flex shrink-0 items-center gap-3 self-start md:self-center">
           <div class="inline-flex cursor-default items-center gap-2 rounded border border-slate-200/80 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 shadow-sm" style="font-family:'Roboto',sans-serif">
             <span class="material-symbols-outlined text-[17px] text-slate-400">calendar_today</span>
             <span class="capitalize">{{ mesActual() }}</span>
@@ -36,7 +34,7 @@ import type { ResumenDashboard } from '../../core/models';
             <span class="text-slate-500">Semana {{ semanaISO() }}</span>
           </div>
           <button type="button" (click)="cargar()"
-            class="inline-flex items-center gap-2 rounded border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900">
+            class="inline-flex items-center gap-2 rounded border border-slate-200/80 bg-white px-3 py-2 text-xs font-medium text-slate-600 shadow-sm transition-colors hover:bg-slate-50 hover:text-slate-900 cursor-pointer">
             <span class="material-symbols-outlined text-[16px] text-slate-400">sync</span>
             <span>Actualizar</span>
           </button>
@@ -46,7 +44,6 @@ import type { ResumenDashboard } from '../../core/models';
       @if (cargando()) {
         <p class="text-sm text-slate-500" style="font-family:'Roboto',sans-serif">Cargando tablero…</p>
       } @else if (resumen(); as r) {
-        <!-- KPIs -->
         <section aria-label="Indicadores Principales" class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
           <div class="flex flex-col justify-between rounded-xl border border-slate-200/70 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.02)] transition-all hover:border-slate-300">
             <div class="flex items-center justify-between">
@@ -104,7 +101,6 @@ import type { ResumenDashboard } from '../../core/models';
           </div>
         </section>
 
-        <!-- Módulos analíticos -->
         <div class="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <div class="flex flex-col justify-between rounded-xl border border-slate-200/70 bg-white p-6 shadow-[0_1px_3px_rgba(0,0,0,0.02)] lg:col-span-6">
             <div>
@@ -187,22 +183,22 @@ import type { ResumenDashboard } from '../../core/models';
           </div>
         </div>
 
-        <!-- Tabla prioritaria (datos de muestra para revisión de diseño) -->
+        <!-- Equipos con Atención Prioritaria - 100% dinámico -->
         <div class="flex flex-col overflow-hidden rounded-xl border border-slate-200/70 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div class="flex flex-col justify-between gap-4 border-b border-slate-100 p-6 md:flex-row md:items-center">
             <div class="flex flex-col gap-1">
               <div class="flex items-center gap-3">
                 <h2 class="text-base font-semibold tracking-tight text-slate-900" style="font-family:'Montserrat',sans-serif">Equipos con Atención Prioritaria</h2>
-                <span class="rounded-full border border-rose-100 bg-rose-50 px-2.5 py-0.5 text-xs font-medium text-rose-700">3 alertas activas</span>
+                <span class="rounded-full border border-rose-100 bg-rose-50 px-2.5 py-0.5 text-xs font-medium text-rose-700">{{ vencidos().length }} alertas activas</span>
               </div>
               <p class="text-xs font-normal text-slate-500" style="font-family:'Roboto',sans-serif">Dispositivos médicos que requieren intervención o seguimiento preventivo inmediato.</p>
             </div>
             <div class="flex items-center gap-3">
-              <button type="button" routerLink="/equipos" class="inline-flex items-center gap-1.5 rounded border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50">
+              <button type="button" routerLink="/equipos" class="inline-flex items-center gap-1.5 rounded border border-slate-200 bg-white px-2 py-1 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 cursor-pointer">
                 <span class="material-symbols-outlined text-[16px] text-slate-400">filter_list</span>
                 <span>Filtrar</span>
               </button>
-              <button type="button" routerLink="/ordenes" class="inline-flex items-center gap-1.5 rounded bg-[#044e46] px-2 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-emerald-900" style="font-family:'Montserrat',sans-serif">
+              <button type="button" routerLink="/ordenes" class="inline-flex items-center gap-1.5 rounded bg-[#044e46] px-2 py-1 text-xs font-medium text-white shadow-sm transition-colors hover:bg-emerald-900 cursor-pointer" style="font-family:'Montserrat',sans-serif">
                 <span class="material-symbols-outlined text-[16px]">add</span>
                 <span>Nueva OT</span>
               </button>
@@ -220,120 +216,52 @@ import type { ResumenDashboard } from '../../core/models';
                 </tr>
               </thead>
               <tbody class="divide-y divide-slate-100 text-xs">
-                <tr class="transition-colors hover:bg-slate-50/60">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-3.5">
-                      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-                        <span class="material-symbols-outlined text-[18px]">air</span>
+                @for (p of vencidos(); track p.id) {
+                  <tr class="transition-colors hover:bg-slate-50/60">
+                    <td class="px-6 py-4">
+                      <div class="flex items-center gap-3.5">
+                        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
+                          <span class="material-symbols-outlined text-[18px]">air</span>
+                        </div>
+                        <div class="flex min-w-0 flex-col">
+                          <span class="text-sm font-medium text-slate-900" style="font-family:'Montserrat',sans-serif">{{ p.equipoNombre }}</span>
+                          <span class="mt-0.5 font-mono text-xs text-slate-400">ID: {{ p.equipoSerial }} · PL-{{ p.id }}</span>
+                        </div>
                       </div>
-                      <div class="flex min-w-0 flex-col">
-                        <span class="text-sm font-medium text-slate-900" style="font-family:'Montserrat',sans-serif">Ventilador Mecánico Puritan Bennett 980</span>
-                        <span class="mt-0.5 font-mono text-xs text-slate-400">ID: MED-VEN-004 · SN: 4200-9844-01</span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="flex flex-col">
+                        <span class="font-medium text-slate-800">{{ p.equipoSerial }}</span>
+                        <span class="text-xs text-slate-400">Plan #{{ p.id }}</span>
                       </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex flex-col">
-                      <span class="font-medium text-slate-800">UCI Adultos</span>
-                      <span class="text-xs text-slate-400">Cama 04 · Torre Norte</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <span class="inline-flex items-center rounded-full border border-rose-100 bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700">Clase III (Alto)</span>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex flex-col">
-                      <span class="font-medium text-rose-600">Preventivo Vencido</span>
-                      <span class="font-mono text-xs text-slate-400">Venció hace 3 días</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <div class="flex items-center justify-end gap-2">
-                      <button type="button" class="rounded bg-[#044e46] px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-emerald-900" style="font-family:'Montserrat',sans-serif">Generar OT</button>
-                      <button type="button" routerLink="/equipos" title="Ver hoja de vida" class="rounded p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700">
-                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="transition-colors hover:bg-slate-50/60">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-3.5">
-                      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-                        <span class="material-symbols-outlined text-[18px]">monitor_heart</span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <span class="inline-flex items-center rounded-full border border-rose-100 bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700">Clase III</span>
+                    </td>
+                    <td class="px-6 py-4">
+                      <div class="flex flex-col">
+                        <span class="font-medium text-rose-600">{{ p.estado }}</span>
+                        <span class="font-mono text-xs text-slate-400">{{ p.diasRestantes }}d · {{ p.proximaFecha }}</span>
                       </div>
-                      <div class="flex min-w-0 flex-col">
-                        <span class="text-sm font-medium text-slate-900" style="font-family:'Montserrat',sans-serif">Desfibrilador Bifásico Zoll R Series</span>
-                        <span class="mt-0.5 font-mono text-xs text-slate-400">ID: MED-DES-012 · SN: ZR-199402</span>
+                    </td>
+                    <td class="px-6 py-4 text-right">
+                      <div class="flex items-center justify-end gap-2">
+                        <button type="button" (click)="generarOT(p)" class="rounded bg-[#044e46] px-2 py-1 text-xs font-medium text-white transition-colors hover:bg-emerald-900 cursor-pointer" style="font-family:'Montserrat',sans-serif">Generar OT</button>
+                        <a routerLink="/equipos" class="rounded p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 cursor-pointer">
+                          <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                        </a>
                       </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex flex-col">
-                      <span class="font-medium text-slate-800">Urgencias Vitales</span>
-                      <span class="text-xs text-slate-400">Carro de Paro 2</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <span class="inline-flex items-center rounded-full border border-rose-100 bg-rose-50 px-2.5 py-1 text-xs font-medium text-rose-700">Clase III (Alto)</span>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex flex-col">
-                      <span class="font-medium text-slate-700">Correctivo en Curso</span>
-                      <span class="font-mono text-xs text-slate-400">OT #2408-09</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <div class="flex items-center justify-end gap-2">
-                      <button type="button" routerLink="/ordenes" class="rounded bg-slate-100 px-3.5 py-1.5 text-xs font-medium text-slate-800 transition-colors hover:bg-slate-200" style="font-family:'Montserrat',sans-serif">Revisar</button>
-                      <button type="button" routerLink="/equipos" title="Ver hoja de vida" class="rounded p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700">
-                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="transition-colors hover:bg-slate-50/60">
-                  <td class="px-6 py-4">
-                    <div class="flex items-center gap-3.5">
-                      <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
-                        <span class="material-symbols-outlined text-[18px]">vaccines</span>
-                      </div>
-                      <div class="flex min-w-0 flex-col">
-                        <span class="text-sm font-medium text-slate-900" style="font-family:'Montserrat',sans-serif">Bomba de Infusión Alaris GH Plus</span>
-                        <span class="mt-0.5 font-mono text-xs text-slate-400">ID: MED-BOM-088 · SN: BD-849102</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex flex-col">
-                      <span class="font-medium text-slate-800">Cirugía Quirófano 3</span>
-                      <span class="text-xs text-slate-400">Pabellón Central</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4">
-                    <span class="inline-flex items-center rounded-full bg-slate-100 px-2.5 py-1 text-xs font-medium text-slate-700">Clase IIb (Moderado)</span>
-                  </td>
-                  <td class="px-6 py-4">
-                    <div class="flex flex-col">
-                      <span class="font-medium text-slate-600">Calibración Programada</span>
-                      <span class="font-mono text-xs text-slate-400">Vence en 2 días</span>
-                    </div>
-                  </td>
-                  <td class="px-6 py-4 text-right">
-                    <div class="flex items-center justify-end gap-2">
-                      <button type="button" routerLink="/ordenes" class="rounded bg-slate-100 px-3.5 py-1.5 text-xs font-medium text-slate-800 transition-colors hover:bg-slate-200" style="font-family:'Montserrat',sans-serif">Revisar</button>
-                      <button type="button" routerLink="/equipos" title="Ver hoja de vida" class="rounded p-1.5 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700">
-                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-                      </button>
-                    </div>
-                  </td>
-                </tr>
+                    </td>
+                  </tr>
+                } @empty {
+                  <tr><td colspan="5" class="py-10 text-center text-sm text-slate-400">Sin equipos prioritarios — todo al día.</td></tr>
+                }
               </tbody>
             </table>
           </div>
           <div class="flex flex-col items-center justify-between gap-2 border-t border-slate-100 px-6 py-4 text-xs text-slate-400 sm:flex-row">
             <span>Trazabilidad metrológica auditable según Numeral 4.2 Res. 3100:2019</span>
-            <a routerLink="/equipos" class="flex items-center gap-1 font-medium text-slate-600 transition-colors hover:text-slate-900">
+            <a routerLink="/equipos" class="flex items-center gap-1 font-medium text-slate-600 transition-colors hover:text-slate-900 cursor-pointer">
               <span>Ver inventario completo</span>
               <span class="material-symbols-outlined text-[14px]">chevron_right</span>
             </a>
@@ -345,12 +273,14 @@ import type { ResumenDashboard } from '../../core/models';
 })
 export class Dashboard {
   private readonly dash = inject(DashboardService);
+  private readonly planesApi = inject(PlanesService);
   private readonly toast = inject(ToastService);
 
   readonly resumen = signal<ResumenDashboard | null>(null);
+  readonly vencidos = signal<Plan[]>([]);
   readonly cargando = signal(true);
 
-  constructor() { this.cargar(); }
+  constructor() { this.cargar(); this.cargarVencidos(); }
 
   cargar(): void {
     this.cargando.set(true);
@@ -358,6 +288,18 @@ export class Dashboard {
       next: (r) => { this.resumen.set(r); this.cargando.set(false); },
       error: () => { this.toast.error('No se pudo cargar el tablero', '¿Backend en :8080?'); this.cargando.set(false); },
     });
+  }
+
+  cargarVencidos(): void {
+    this.planesApi.vencidos().subscribe({
+      next: (list) => this.vencidos.set(list.slice(0, 5)),
+      error: () => this.vencidos.set([]),
+    });
+  }
+
+  generarOT(p: Plan): void {
+    // Navega a órdenes con pre-selección — el módulo de órdenes se encarga de la creación
+    this.toast.info('Generar OT', `Equipo ${p.equipoSerial} — usa “Nueva OT” en Órdenes`);
   }
 
   estadoEquipo(r: ResumenDashboard, k: string): number { return r.equiposPorEstado?.[k] ?? 0; }

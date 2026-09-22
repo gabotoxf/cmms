@@ -118,6 +118,13 @@ export class UiAvatarDrop {
       case 'png': return 'image/png';
       case 'webp': return 'image/webp';
       case 'gif': return 'image/gif';
+      case 'heic':
+      case 'heif': return 'image/heic';
+      case 'avif': return 'image/avif';
+      case 'bmp': return 'image/bmp';
+      case 'tiff':
+      case 'tif': return 'image/tiff';
+      case 'svg': return 'image/svg+xml';
       default: return '';
     }
   }

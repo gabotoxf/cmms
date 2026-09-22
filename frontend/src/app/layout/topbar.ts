@@ -9,7 +9,7 @@ import { UiAvatarDrop } from '../shared/ui/avatar-drop';
   standalone: true,
   imports: [FormsModule, UiAvatarDrop],
   template: `
-    <header class="flex h-14 w-full items-center gap-3 border-b border-slate-200 bg-white px-4 text-sm">
+    <header class="flex w-full items-center gap-3 border-b border-slate-200 bg-white px-4 py-2 text-sm">
 
       <!-- Marca / breadcrumb de módulo -->
       <div class="flex items-center gap-2 whitespace-nowrap">
@@ -38,9 +38,9 @@ import { UiAvatarDrop } from '../shared/ui/avatar-drop';
         {{ equiposActivos }} Equipos Activos
       </span>
 
-      <!-- Usuario con menú desplegable -->
+      <!-- Usuario con menú desplegable · badge -->
       <div class="relative ml-auto group">
-        <button type="button" class="flex items-center gap-3 rounded-lg p-1 transition-colors hover:bg-slate-50" aria-haspopup="menu">
+        <button type="button" class="flex items-center gap-3 rounded-md border border-slate-300 bg-slate-100 px-3 py-1.5 shadow-sm transition-colors hover:bg-white" aria-haspopup="menu">
           <div class="text-right leading-tight">
             <div class="font-semibold text-slate-800">{{ usuario }}</div>
             <div class="text-[11px] font-semibold uppercase tracking-wide text-teal-700">{{ rol }}</div>
@@ -124,7 +124,7 @@ import { UiAvatarDrop } from '../shared/ui/avatar-drop';
                   class="h-9 rounded-sm border border-slate-300 bg-white px-3 text-sm text-slate-900 outline-none focus:border-teal-700" />
               </label>
               <div class="grid gap-1 text-xs font-medium text-slate-600">Correo
-                <div class="flex h-9 items-center gap-1.5 rounded-sm border border-slate-200 bg-slate-50 px-3 text-sm text-slate-400">
+                <div class="flex h-9 items-center gap-1.5 rounded-sm overflow-x-auto border border-slate-200 bg-slate-50 px-3 text-sm text-slate-400">
                   <span class="material-symbols-outlined text-[15px]">lock</span>
                   <span class="truncate">{{ email }}</span>
                 </div>
@@ -268,8 +268,14 @@ export class Topbar {
   }
 
   private avatarError(e?: unknown): void {
-    const status = (e as { status?: number })?.status;
-    this.toast.error('Foto no guardada', `El perfil se guardó, pero la foto falló${status !== undefined ? ` (HTTP ${status})` : ' (sin respuesta del servidor)'}`);
+    const err = e as { status?: number; error?: { detail?: string; title?: string; message?: string } };
+    const detail = err?.error?.detail || err?.error?.message || err?.error?.title;
+    const status = err?.status;
+    // status 0 = backend caído / CORS / sin red — no es 400 del validador
+    const sufijo = status === 0
+      ? 'sin respuesta del servidor — verifica que el backend esté corriendo en :8080'
+      : detail ? detail : (status !== undefined ? `HTTP ${status}` : 'sin respuesta del servidor');
+    this.toast.error('Foto no guardada', `El perfil se guardó, pero la foto falló: ${sufijo}`);
     this.guardando.set(false);
   }
 

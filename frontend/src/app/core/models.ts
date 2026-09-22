@@ -170,6 +170,7 @@ export interface RegistroRequest {
 }
 
 export interface UsuarioAdminRequest {
+  email: string;
   nombre: string;
   apellido: string;
   celular?: string;

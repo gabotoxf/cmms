@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#f8fafc]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CMMS Biomédica · Usuarios y Control de Accesos</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&amp;family=Montserrat:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Roboto:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Roboto', '"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            data: ['"IBM Plex Sans"', 'sans-serif'],
+            heading: ['"Montserrat"', 'sans-serif'],
+          },
+          colors: {
+            clinical: {
+              DEFAULT: '#044e46',
+              dark: '#033a34',
+              light: '#e6f3f1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .tabular-numbers {
+      font-variant-numeric: tabular-nums lining-nums;
+    }
+    body {
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+      -webkit-font-smoothing: antialiased;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #e2e8f0;
+      border-radius: 2px;
+    }
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Montserrat', sans-serif !important;
+    }
+  </style>
+</head>
+<body class="h-full font-sans text-slate-900 selection:bg-slate-900 selection:text-white flex overflow-hidden">
+<!-- Persistent Left Sidebar -->
+<aside class="w-60 shrink-0 bg-white border-r border-slate-200/90 flex flex-col justify-between z-30 select-none">
+<div class="flex flex-col">
+<!-- Clinical Brand Mark -->
+<div class="h-16 px-5 flex items-center justify-between border-b border-slate-200/80">
+<div class="flex items-center gap-3">
+<div class="h-7 w-7 rounded border border-slate-900 bg-slate-900 flex items-center justify-center text-white text-[11px] font-mono font-semibold tracking-wider">
+          BIO
+        </div>
+<div class="flex flex-col">
+<span class="text-[13.5px] font-semibold text-slate-900 leading-none tracking-tight font-heading">CMMS Platform</span>
+<span class="text-[10px] text-slate-600 font-mono tracking-wider uppercase mt-1">Ingeniería Clínica</span>
+</div>
+</div>
+</div>
+<!-- Navigation Section -->
+<div class="px-3 pt-6 pb-2">
+<span class="px-2 text-[10px] font-mono uppercase tracking-[0.14em] text-slate-600 font-medium">Módulos de Control</span>
+</div>
+<nav class="flex flex-col gap-0.5 px-3">
+<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">dashboard</span>
+<span>Tablero de Control</span>
+</a>
+<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">devices_other</span>
+<span>Parque Biomédico</span>
+</a>
+<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">event_repeat</span>
+<span>Planes Preventivos</span>
+</a>
+<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">task_alt</span>
+<span>Órdenes de Trabajo</span>
+</a>
+<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">analytics</span>
+<span>Aseguramiento &amp; Métricas</span>
+</a>
+<!-- Active Module -->
+<a class="group relative flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium bg-slate-100/80 text-slate-900 transition-colors" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+<span class="material-symbols-outlined text-[17px] text-slate-900">badge</span>
+<span>Usuarios y Accesos</span>
+</a>
+<a class="group flex items-center gap-2.5 px-2.5 py-1.5 rounded-md text-[13px] font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition-colors" href="#">
+<span class="w-1.5 h-1.5 rounded-full bg-transparent"></span>
+<span class="material-symbols-outlined text-[17px] text-slate-400 group-hover:text-slate-700">clinical_notes</span>
+<span>Reportes Regulatorios</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Regulatory Footer Footprint -->
+<div class="p-3 border-t border-slate-200/80">
+<div class="p-2.5 bg-slate-50/80 rounded border border-slate-200/60 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-mono text-[10px] uppercase font-medium text-slate-600 tracking-wider">Habilitación MSPS</span>
+<span class="font-mono text-[10px] text-slate-500">v2.4</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+<span class="text-[11px] font-medium text-slate-700">Res. 3100 / 2019</span>
+</div>
+<span class="text-[10px] text-slate-500 font-data">Estándar Dotación Num. 4.2</span>
+</div>
+</div>
+</aside>
+<!-- Main Viewport Container -->
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- Topbar Header -->
+<header class="h-16 bg-white border-b border-slate-200/80 px-7 flex items-center justify-between shrink-0 z-20">
+<div class="flex items-center gap-4">
+<!-- Breadcrumb & Clinic Info -->
+<div class="flex items-center gap-2 font-mono text-[11px] text-slate-500 tracking-wide uppercase">
+<span>Clínica San Rafael</span>
+<span class="text-slate-300">/</span>
+<span class="text-slate-700 font-medium">Sede Principal</span>
+</div>
+<div class="h-3.5 w-px bg-slate-200"></div>
+<!-- Live status counter pill -->
+<div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[11px] font-data text-slate-700">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+<span class="tabular-numbers font-medium">348</span>
+<span class="text-slate-500">Equipos Activos</span>
+</div>
+</div>
+<!-- Right User Controls -->
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2.5 text-right font-data">
+<div class="flex flex-col">
+<span class="text-[12.5px] font-medium text-slate-900 leading-none">Ing. Carlos Mendoza</span>
+<span class="text-[10px] font-mono text-slate-500 uppercase mt-1">Superintendente Biomédico</span>
+</div>
+<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-[11.5px] font-mono font-semibold text-slate-700">
+          CM
+        </div>
+</div>
+<div class="h-4 w-px bg-slate-200"></div>
+<button class="text-slate-400 hover:text-slate-700 transition-colors" title="Finalizar sesión" type="button">
+<span class="material-symbols-outlined text-[19px]">logout</span>
+</button>
+</div>
+</header>
+<!-- Scrollable Workspace -->
+<main class="flex-1 overflow-y-auto">
+<div class="max-w-[1500px] mx-auto px-7 py-8 space-y-7">
+<!-- Page Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-200/80 pb-6">
+<div>
+<div class="flex items-center gap-2 text-[11px] font-mono font-medium tracking-wider uppercase text-teal-800">
+<span>PERSONAL Y SEGURIDAD</span>
+<span class="text-slate-300">·</span>
+<span>CONTROL OPERACIONAL DE DOTACIÓN</span>
+<span class="text-slate-300">·</span>
+<span class="text-slate-500">HABILITACIÓN RES. 3100</span>
+</div>
+<h1 class="text-2xl font-extrabold tracking-tight text-slate-950 mt-1.5 font-heading">Usuarios y Control de Accesos</h1>
+<p class="text-[13px] font-data text-slate-500 mt-0.5">Gestión de personal técnico, perfiles asistenciales y permisos de firma digital para habilitación (Res. 3100 de 2019).</p>
+</div>
+<div class="flex items-center gap-2.5 font-data">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:border-slate-300 rounded text-[12.5px] text-slate-700 transition-colors shadow-xs" type="button">
+<span class="material-symbols-outlined text-[15px] text-slate-500">file_download</span>
+<span class="font-medium">Exportar Matriz de Roles</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-[#044e46] hover:bg-[#033a34] text-white rounded text-[12.5px] font-medium transition-colors shadow-xs" id="btn-open-invite" type="button">
+<span class="material-symbols-outlined text-[16px]">person_add</span>
+<span>+ Invitar Colaborador</span>
+</button>
+</div>
+</div>
+<!-- Executive KPI Ribbon -->
+<section aria-label="Métricas Principales de Personal" class="grid grid-cols-2 md:grid-cols-4 bg-white border border-slate-200 rounded-md divide-y md:divide-y-0 md:divide-x divide-slate-200 shadow-xs">
+<!-- KPI 1 -->
+<div class="p-5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Total Usuarios</span>
+<span class="text-[10px] font-mono px-1.5 py-0.5 border border-slate-200 rounded text-slate-600 bg-slate-50">100% Dotación</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-1">
+<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">28</span>
+<span class="text-[12px] font-data text-slate-400">activos</span>
+</div>
+</div>
+<div class="text-[11.5px] font-data text-teal-700 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+<span>Ingeniería Biomédica &amp; Planta</span>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="p-5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Técnicos en Turno</span>
+<span class="text-[10px] font-mono px-1.5 py-0.5 border border-teal-200 rounded text-teal-700 bg-teal-50 font-medium">Activos</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-1">
+<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">08</span>
+<span class="text-[12px] font-data text-slate-400">de 12 asignados</span>
+</div>
+</div>
+<div class="text-[11.5px] font-data text-slate-500">
+            Rondas en UCI y Quirófanos
+          </div>
+</div>
+<!-- KPI 3 -->
+<div class="p-5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Firmas Habilitadas</span>
+<span class="text-[10px] font-mono px-1.5 py-0.5 border border-slate-200 rounded text-slate-600 bg-slate-50">85.7%</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-1">
+<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">24</span>
+<span class="text-[12px] font-data text-slate-400">validadas</span>
+</div>
+</div>
+<div class="text-[11.5px] font-data text-amber-700 flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+<span>1 firma en renovación técnica</span>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="p-5 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-mono uppercase tracking-wider text-slate-500">Roles Configurados</span>
+<span class="text-[10px] font-mono text-teal-700 bg-teal-50 border border-teal-200 px-1.5 py-0.5 rounded font-medium">RBAC Auditado</span>
+</div>
+<div class="my-3">
+<div class="flex items-baseline gap-1">
+<span class="text-3xl font-bold tracking-tight text-slate-900 tabular-numbers font-heading">04</span>
+<span class="text-sm font-normal text-slate-500 font-mono">perfiles</span>
+</div>
+</div>
+<div class="text-[11.5px] font-data text-slate-500">
+            Admin, Validador, Técnico, Auditor
+          </div>
+</div>
+</section>
+<!-- Search & Filters Strip -->
+<div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3 border border-slate-200 rounded-md shadow-xs font-data">
+<div class="relative flex-1 max-w-md">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+<span class="material-symbols-outlined text-[17px]">search</span>
+</div>
+<input class="w-full pl-9 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-slate-400" id="user-search-input" placeholder="Buscar por colaborador, documento o Tarjeta Profesional..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded text-[12px]">
+<span class="text-slate-500 font-mono uppercase text-[10.5px]">Rol:</span>
+<select class="bg-transparent text-slate-800 font-medium focus:outline-none cursor-pointer pr-2 text-[12px]" id="filter-role">
+<option value="all">Todos los roles</option>
+<option value="admin">Administrador General</option>
+<option value="ing">Ingeniero Validador</option>
+<option value="tech">Técnico Asistencial</option>
+<option value="auditor">Auditor Externo</option>
+</select>
+</div>
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-slate-50 border border-slate-200 rounded text-[12px]">
+<span class="text-slate-500 font-mono uppercase text-[10.5px]">Estado:</span>
+<select class="bg-transparent text-slate-800 font-medium focus:outline-none cursor-pointer pr-2 text-[12px]" id="filter-status">
+<option value="all">Todos</option>
+<option value="active">Activo</option>
+<option value="shift">En Turno</option>
+<option value="inactive">Inactivo</option>
+</select>
+</div>
+<button class="p-1.5 border border-slate-200 hover:bg-slate-50 text-slate-500 hover:text-slate-800 rounded transition-colors" id="btn-reset-filters" title="Restablecer filtros" type="button">
+<span class="material-symbols-outlined text-[16px]">restart_alt</span>
+</button>
+</div>
+</div>
+<!-- Main Users Table Section -->
+<section class="bg-white border border-slate-200 rounded-md shadow-xs overflow-hidden">
+<!-- Table Top Header Context -->
+<div class="px-6 py-4 border-b border-slate-200/80 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white">
+<div>
+<div class="flex items-center gap-2.5">
+<h2 class="text-[15px] font-semibold text-slate-950 tracking-tight font-heading">Matriz de Personal Autorizado</h2>
+<span class="px-2 py-0.5 rounded border border-slate-200 bg-slate-50 text-[11px] font-mono font-medium text-slate-700 tabular-numbers">
+                5 REGISTROS VISIBLES
+              </span>
+</div>
+<p class="text-[12.5px] font-data text-slate-500 mt-0.5">Colaboradores registrados con competencia técnica para firma de actas e intervención asistencial.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1.5 text-[11.5px] font-mono text-slate-500">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+              Sede Central San Rafael
+            </span>
+</div>
+</div>
+<!-- High-Density Clinical Table -->
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse" id="users-table">
+<thead>
+<tr class="border-b border-slate-200 bg-slate-50/70 text-[10.5px] font-mono uppercase tracking-wider text-slate-600 select-none">
+<th class="py-3 px-6 font-medium">Usuario &amp; Cargo</th>
+<th class="py-3 px-4 font-medium">Tarjeta Profesional (TP)</th>
+<th class="py-3 px-4 font-medium">Rol y Alcance</th>
+<th class="py-3 px-4 font-medium">Firma Digital / Token</th>
+<th class="py-3 px-4 font-medium">Estado</th>
+<th class="py-3 px-6 text-right font-medium">Acción</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 font-data text-[13px]">
+<!-- Row 1: Carlos Mendoza -->
+<tr class="hover:bg-slate-50/60 transition-colors group" data-role="admin" data-status="active">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded border border-slate-900 bg-slate-900 flex items-center justify-center text-white font-mono text-[11px] font-semibold shrink-0">
+                      CM
+                    </div>
+<div class="flex flex-col min-w-0">
+<div class="flex items-center gap-1.5">
+<span class="font-semibold text-slate-900 truncate">Ing. Carlos Mendoza</span>
+<span class="material-symbols-outlined text-[14px] text-teal-700" title="Superintendente">verified</span>
+</div>
+<span class="text-[11.5px] text-slate-600">Superintendente Biomédico</span>
+<span class="font-mono text-[10.5px] text-slate-400">c.mendoza@clinicasanrafael.com.co</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono font-medium text-slate-900 text-[12.5px]">34892-COL</span>
+<span class="font-mono text-[10.5px] text-teal-700">Vigente COPNIA</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-900"></span>
+                      Administrador General
+                    </span>
+<span class="text-[11px] text-slate-500">Control Total • Gestión Infraestructura</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-teal-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                      SHA-256 Vigente
+                    </span>
+<span class="font-mono text-[10px] text-slate-400">Expira: Dic 2026 · ID #89F2A</span>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                    Activo
+                  </span>
+</td>
+<td class="py-3.5 px-6 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
+<span class="material-symbols-outlined text-[16px]">key</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2: David Torres -->
+<tr class="hover:bg-slate-50/60 transition-colors group" data-role="ing" data-status="active">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-700 font-mono text-[11px] font-semibold shrink-0">
+                      DT
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-semibold text-slate-900 truncate">Ing. David Torres</span>
+<span class="text-[11.5px] text-slate-600">Ingeniero Clínico Senior</span>
+<span class="font-mono text-[10.5px] text-slate-400">d.torres@clinicasanrafael.com.co</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono font-medium text-slate-900 text-[12.5px]">45892-COL</span>
+<span class="font-mono text-[10.5px] text-teal-700">Vigente COPNIA</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                      Ingeniero Validador
+                    </span>
+<span class="text-[11px] text-slate-500">Soporte Vital • Certificación Técnica</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-teal-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                      Token Vigente
+                    </span>
+<span class="font-mono text-[10px] text-slate-400">Expira: Oct 2025 · ID #42D1C</span>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                    Activo
+                  </span>
+</td>
+<td class="py-3.5 px-6 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
+<span class="material-symbols-outlined text-[16px]">key</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3: Andrea Gómez -->
+<tr class="hover:bg-slate-50/60 transition-colors group" data-role="tech" data-status="shift">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded border border-teal-200 bg-teal-50 flex items-center justify-center text-teal-800 font-mono text-[11px] font-semibold shrink-0">
+                      AG
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-semibold text-slate-900 truncate">Tec. Andrea Gómez</span>
+<span class="text-[11.5px] text-slate-600">Especialista Electromedicina</span>
+<span class="font-mono text-[10.5px] text-slate-400">a.gomez@clinicasanrafael.com.co</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono font-medium text-slate-900 text-[12.5px]">89012-COL</span>
+<span class="font-mono text-[10.5px] text-teal-700">Vigente CONALTEL</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span>
+                      Técnico de Campo
+                    </span>
+<span class="text-[11px] text-slate-500">Mantenimiento Correctivo &amp; Calibración</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-teal-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                      Token Vigente
+                    </span>
+<span class="font-mono text-[10px] text-slate-400">Expira: Ago 2025 · ID #73E90</span>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-300 bg-teal-100/70 text-[11px] font-mono font-semibold text-teal-900">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-700 animate-pulse"></span>
+                    En Turno
+                  </span>
+</td>
+<td class="py-3.5 px-6 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
+<span class="material-symbols-outlined text-[16px]">key</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 4: Carlos Silva -->
+<tr class="hover:bg-slate-50/60 transition-colors group" data-role="tech" data-status="active">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-700 font-mono text-[11px] font-semibold shrink-0">
+                      CS
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-semibold text-slate-900 truncate">Carlos Silva</span>
+<span class="text-[11.5px] text-slate-600">Técnico de Ronda Preventiva</span>
+<span class="font-mono text-[10.5px] text-slate-400">c.silva@clinicasanrafael.com.co</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono font-medium text-slate-900 text-[12.5px]">91402-COL</span>
+<span class="font-mono text-[10.5px] text-teal-700">Vigente CONALTEL</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                      Técnico Asistencial
+                    </span>
+<span class="text-[11px] text-slate-500">Inspección de Rutina &amp; Pruebas</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 font-mono text-[11px] font-medium text-rose-700">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-600"></span>
+                      Pendiente Renovación
+                    </span>
+<span class="font-mono text-[10px] text-slate-400">Vencido hace 3 días • Bloqueado firma</span>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                    Activo
+                  </span>
+</td>
+<td class="py-3.5 px-6 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
+<span class="material-symbols-outlined text-[16px]">key</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 5: Elena Restrepo -->
+<tr class="hover:bg-slate-50/60 transition-colors group" data-role="auditor" data-status="active">
+<td class="py-3.5 px-6">
+<div class="flex items-center gap-3">
+<div class="h-8 w-8 rounded border border-slate-200 bg-slate-100 flex items-center justify-center text-slate-700 font-mono text-[11px] font-semibold shrink-0">
+                      ER
+                    </div>
+<div class="flex flex-col min-w-0">
+<span class="font-semibold text-slate-900 truncate">Dra. Elena Restrepo</span>
+<span class="text-[11.5px] text-slate-600">Delegada Calidad &amp; Acreditación</span>
+<span class="font-mono text-[10.5px] text-slate-400">e.restrepo@auditoriabiomedica.org</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<div class="flex flex-col">
+<span class="font-mono font-medium text-slate-400 text-[12.5px]">N/A</span>
+<span class="font-mono text-[10.5px] text-slate-400">No Asistencial</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 text-slate-900 font-medium text-[12.5px]">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                      Auditor Habilitación
+                    </span>
+<span class="text-[11px] text-slate-500">Acceso Solo Lectura • Descarga de Actas</span>
+</div>
+</td>
+<td class="py-3.5 px-4">
+<div class="flex flex-col">
+<span class="inline-flex items-center gap-1.5 font-mono text-[11px] text-slate-500">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                      No Requerida
+                    </span>
+<span class="font-mono text-[10px] text-slate-400">Sin potestad técnica asistencial</span>
+</div>
+</td>
+<td class="py-3.5 px-4 whitespace-nowrap">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded border border-teal-200 bg-teal-50 text-[11px] font-mono font-medium text-teal-800">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                    Activo
+                  </span>
+</td>
+<td class="py-3.5 px-6 text-right whitespace-nowrap">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Editar perfil" type="button">
+<span class="material-symbols-outlined text-[16px]">edit</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Permisos RBAC" type="button">
+<span class="material-symbols-outlined text-[16px]">key</span>
+</button>
+<button class="p-1 rounded border border-slate-200 hover:border-slate-300 text-slate-500 hover:text-slate-900 transition-colors" title="Más opciones" type="button">
+<span class="material-symbols-outlined text-[16px]">more_vert</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination & Footer -->
+<div class="px-6 py-3 bg-slate-50 border-t border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-[11.5px] font-mono text-slate-600">
+<div>
+            Mostrando <span class="font-semibold text-slate-900">5</span> de <span class="font-semibold text-slate-900">28</span> colaboradores registrados
+          </div>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded border border-slate-200 text-slate-400 disabled:opacity-40" disabled="" type="button">
+<span class="material-symbols-outlined text-[15px]">chevron_left</span>
+</button>
+<span class="px-2 py-0.5 bg-white border border-slate-200 rounded text-slate-900 font-semibold shadow-2xs">1</span>
+<button class="px-2 py-0.5 hover:bg-slate-100 rounded text-slate-600 transition-colors" type="button">2</button>
+<button class="px-2 py-0.5 hover:bg-slate-100 rounded text-slate-600 transition-colors" type="button">3</button>
+<button class="p-1 rounded border border-slate-200 hover:bg-slate-100 text-slate-600" type="button">
+<span class="material-symbols-outlined text-[15px]">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Security, Custody & Audit Compliance Section -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left: Trazabilidad de Firmas Criptográficas -->
+<div class="lg:col-span-7 bg-white border border-slate-200 rounded-md p-6 flex flex-col justify-between shadow-xs">
+<div>
+<div class="flex items-start justify-between">
+<div>
+<h2 class="text-[14.5px] font-semibold text-slate-950 tracking-tight font-heading">Trazabilidad de Firmas y Sesiones Criptográficas</h2>
+<p class="text-[12.5px] font-data text-slate-500 mt-0.5">Registro inmutable de actos técnicos vinculantes conforme a Dec. 4725 y Res. 3100.</p>
+</div>
+<a class="text-teal-700 hover:text-teal-900 font-medium font-sans text-[11.5px] flex items-center gap-1" href="#">
+<span>Ver Bitácora</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+<!-- Structured Event Rows -->
+<div class="mt-5 space-y-3 font-data">
+<!-- Event 1 -->
+<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start justify-between gap-3">
+<div class="flex items-start gap-2.5">
+<div class="w-7 h-7 rounded bg-teal-50 border border-teal-200 text-teal-700 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[15px]">draw</span>
+</div>
+<div>
+<div class="text-[13px] font-medium text-slate-900">
+                      Firma electrónica de Acta Preventiva #OT-2025-0891
+                    </div>
+<div class="text-[11.5px] text-slate-600 mt-0.5">
+                      Ventilador Dräger Evita V300 (EQ-00412) · Por: <strong class="text-slate-800">Ing. David Torres</strong>
+</div>
+<div class="font-mono text-[10.5px] text-slate-400 mt-1">
+                      Hash: <span class="text-slate-600">8f9e...b201a4</span> · Cert: COPNIA-45892 · IP: 192.168.10.42
+                    </div>
+</div>
+</div>
+<span class="font-mono text-[10.5px] text-slate-500 whitespace-nowrap">Hoy, 10:14 COT</span>
+</div>
+<!-- Event 2 -->
+<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start justify-between gap-3">
+<div class="flex items-start gap-2.5">
+<div class="w-7 h-7 rounded bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[15px]">lock_reset</span>
+</div>
+<div>
+<div class="text-[13px] font-medium text-slate-900">
+                      Generación de Token OTP para calibración de desfibrilador
+                    </div>
+<div class="text-[11.5px] text-slate-600 mt-0.5">
+                      Monitor Desfibrilador Zoll R Series (EQ-00109) · Por: <strong class="text-slate-800">Tec. Andrea Gómez</strong>
+</div>
+<div class="font-mono text-[10.5px] text-slate-400 mt-1">
+                      Custodia asignada a Urgencias · Autenticación biométrica 2FA OK
+                    </div>
+</div>
+</div>
+<span class="font-mono text-[10.5px] text-slate-500 whitespace-nowrap">Hoy, 09:32 COT</span>
+</div>
+<!-- Event 3 -->
+<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start justify-between gap-3">
+<div class="flex items-start gap-2.5">
+<div class="w-7 h-7 rounded bg-slate-100 border border-slate-200 text-slate-700 flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[15px]">visibility</span>
+</div>
+<div>
+<div class="text-[13px] font-medium text-slate-900">
+                      Acceso de auditoría externa: Expediente Técnico Quirófano 4
+                    </div>
+<div class="text-[11.5px] text-slate-600 mt-0.5">
+                      Descarga de hojas de vida e historiales · Por: <strong class="text-slate-800">Dra. Elena Restrepo</strong>
+</div>
+<div class="font-mono text-[10.5px] text-slate-400 mt-1">
+                      Sesión de solo lectura autorizada bajo protocolo de acreditación
+                    </div>
+</div>
+</div>
+<span class="font-mono text-[10.5px] text-slate-500 whitespace-nowrap">Ayer, 16:45 COT</span>
+</div>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-slate-600 mt-4">
+<span>Algoritmo: ECDSA P-256 + SHA-256</span>
+<span class="text-teal-700 font-medium font-sans">Cadena de custodia intacta</span>
+</div>
+</div>
+<!-- Right: Marco Normativo y Custodia Legal -->
+<div class="lg:col-span-5 bg-white border border-slate-200 rounded-md p-6 flex flex-col justify-between shadow-xs">
+<div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-teal-700 text-[20px]">policy</span>
+<h3 class="text-[14.5px] font-semibold text-slate-950 tracking-tight font-heading">Marco Normativo y Custodia Legal</h3>
+</div>
+<p class="text-[12.5px] font-data text-slate-500 mb-4">Garantías jurídicas y de habilitación para el estándar de dotación hospitalaria:</p>
+<ul class="space-y-3 font-data text-[12.5px] text-slate-700">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-teal-700 text-[16px] mt-0.5 shrink-0">verified</span>
+<span><strong class="text-slate-900">Res. 3100 de 2019:</strong> Exige registro de TP vigente y aval técnico individual por equipo de soporte vital.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-teal-700 text-[16px] mt-0.5 shrink-0">verified</span>
+<span><strong class="text-slate-900">Decreto 4725 de 2005:</strong> Trazabilidad del fabricante, mantenimiento con firma y sello del responsable calificado.</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined text-teal-700 text-[16px] mt-0.5 shrink-0">verified</span>
+<span><strong class="text-slate-900">Ley 527 de 1999:</strong> Validez probatoria de firmas digitales y estampas de tiempo en actas de inspección.</span>
+</li>
+</ul>
+</div>
+<div class="mt-6 p-3 bg-slate-50 border border-slate-200/80 rounded">
+<div class="flex items-center justify-between font-mono text-[11px]">
+<span class="uppercase font-semibold text-slate-800">Certificado Institucional</span>
+<span class="text-teal-700 font-medium">Válido hasta 2027</span>
+</div>
+<p class="font-mono text-[10.5px] text-slate-500 mt-1 truncate">
+              Autoridad Certificadora: GSE / Andes SCD · ID: CSR-BME-99124
+            </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Invitation Modal Dialog -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/40 backdrop-blur-xs hidden" id="invite-modal">
+<div class="bg-white rounded-lg max-w-lg w-full p-6 shadow-xl border border-slate-200 relative animate-in fade-in zoom-in duration-150 font-data">
+<div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-200">
+<div>
+<h3 class="text-[15px] font-bold text-slate-950 font-heading">Invitar Nuevo Colaborador</h3>
+<p class="text-[12px] text-slate-500">Vincular ingeniero o técnico al módulo de habilitación</p>
+</div>
+<button class="p-1 text-slate-400 hover:text-slate-700 rounded transition-colors" id="btn-close-modal" type="button">
+<span class="material-symbols-outlined text-[19px]">close</span>
+</button>
+</div>
+<form class="space-y-3.5" id="invite-form">
+<div>
+<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Nombre Completo *</label>
+<input class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400" placeholder="Ej. Ing. Marcela Duarte" required="" type="text"/>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Correo Institucional *</label>
+<input class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400" placeholder="marcela.duarte@..." required="" type="email"/>
+</div>
+<div>
+<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Tarjeta Profesional (TP)</label>
+<input class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400" placeholder="Ej. 67210-COL" type="text"/>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Rol Asignado *</label>
+<select class="w-full px-3 py-1.5 bg-slate-50 border border-slate-200 rounded text-[12.5px] text-slate-900 focus:bg-white focus:outline-none focus:border-slate-400">
+<option value="ing">Ingeniero Biomédico</option>
+<option value="tech">Técnico de Mantenimiento</option>
+<option value="admin">Administrador General</option>
+<option value="auditor">Auditor de Calidad</option>
+</select>
+</div>
+<div>
+<label class="block text-[11px] font-mono uppercase tracking-wider text-slate-600 mb-1">Sede Primaria</label>
+<input class="w-full px-3 py-1.5 bg-slate-100 border border-slate-200 rounded text-[12.5px] text-slate-600 cursor-not-allowed" readonly="" type="text" value="Clínica San Rafael"/>
+</div>
+</div>
+<div class="p-3 bg-slate-50 border border-slate-200/80 rounded flex items-start gap-2.5">
+<input checked="" class="mt-0.5 accent-[#044e46] rounded" id="check-crypto" type="checkbox"/>
+<label class="text-[12px] text-slate-700" for="check-crypto">
+          Emitir solicitud de certificado criptográfico digital de firma para actas de habilitación (Res. 3100 de 2019).
+        </label>
+</div>
+<div class="flex items-center justify-end gap-2 pt-2">
+<button class="px-3.5 py-1.5 text-[12.5px] text-slate-600 hover:text-slate-900 rounded transition-colors" id="btn-cancel-modal" type="button">
+          Cancelar
+        </button>
+<button class="px-3.5 py-1.5 bg-[#044e46] hover:bg-[#033a34] text-white text-[12.5px] font-medium rounded shadow-xs transition-colors" type="submit">
+          Enviar Invitación y Token
+        </button>
+</div>
+</form>
+</div>
+</div>
+<script>
+  // Filter logic
+  const searchInput = document.getElementById('user-search-input');
+  const roleSelect = document.getElementById('filter-role');
+  const statusSelect = document.getElementById('filter-status');
+  const resetButton = document.getElementById('btn-reset-filters');
+  const tableRows = document.querySelectorAll('#users-table tbody tr');
+
+  function applyFilters() {
+    const query = (searchInput?.value || '').toLowerCase().trim();
+    const role = roleSelect?.value || 'all';
+    const status = statusSelect?.value || 'all';
+
+    tableRows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      const rowRole = row.getAttribute('data-role');
+      const rowStatus = row.getAttribute('data-status');
+
+      const matchesQuery = !query || text.includes(query);
+      const matchesRole = role === 'all' || rowRole === role;
+      const matchesStatus = status === 'all' || rowStatus === status;
+
+      if (matchesQuery && matchesRole && matchesStatus) {
+        row.style.display = '';
+      } else {
+        row.style.display = 'none';
+      }
+    });
+  }
+
+  searchInput?.addEventListener('input', applyFilters);
+  roleSelect?.addEventListener('change', applyFilters);
+  statusSelect?.addEventListener('change', applyFilters);
+
+  resetButton?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    if (roleSelect) roleSelect.value = 'all';
+    if (statusSelect) statusSelect.value = 'all';
+    applyFilters();
+  });
+
+  // Modal interactions
+  const openInviteBtn = document.getElementById('btn-open-invite');
+  const closeInviteBtn = document.getElementById('btn-close-modal');
+  const cancelInviteBtn = document.getElementById('btn-cancel-modal');
+  const inviteModal = document.getElementById('invite-modal');
+  const inviteForm = document.getElementById('invite-form');
+
+  function toggleModal(show) {
+    if (inviteModal) {
+      if (show) {
+        inviteModal.classList.remove('hidden');
+      } else {
+        inviteModal.classList.add('hidden');
+      }
+    }
+  }
+
+  openInviteBtn?.addEventListener('click', () => toggleModal(true));
+  closeInviteBtn?.addEventListener('click', () => toggleModal(false));
+  cancelInviteBtn?.addEventListener('click', () => toggleModal(false));
+
+  inviteModal?.addEventListener('click', (e) => {
+    if (e.target === inviteModal) toggleModal(false);
+  });
+
+  inviteForm?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    toggleModal(false);
+  });
+</script>
+</body></html>
