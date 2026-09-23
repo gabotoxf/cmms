@@ -24,7 +24,6 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 import java.io.IOException;
-import java.nio.file.Files;
 
 @Service
 public class AuthService {
@@ -196,7 +195,6 @@ public class AuthService {
         } catch (IOException e) {
             throw new ReglasNegocioException("No se pudo guardar el avatar: " + e.getMessage());
         }
-        usuario.setAvatar(null); // ya no se guarda en BYTEA
         usuario.setAvatarTipo(tipo);
         usuarioRepository.save(usuario);
     }
@@ -223,18 +221,16 @@ public class AuthService {
     @Transactional
     public void eliminarAvatar(Usuario usuario) {
         try { avatarStorage.borrar(usuario.getId()); } catch (IOException ignored) {}
-        usuario.setAvatar(null);
         usuario.setAvatarTipo(null);
         usuarioRepository.save(usuario);
     }
 
-    /** Lee avatar: primero filesystem, fallback a BYTEA legacy. */
     public byte[] cargarAvatarBytes(Usuario usuario) {
         try {
-            byte[] fs = avatarStorage.cargar(usuario.getId());
-            if (fs != null) return fs;
-        } catch (IOException ignored) {}
-        return usuario.getAvatar();
+            return avatarStorage.cargar(usuario.getId());
+        } catch (IOException ignored) {
+            return null;
+        }
     }
 
     public String resolverAvatarTipo(Usuario usuario) {

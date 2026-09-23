@@ -1,0 +1,4 @@
+# dumps reales ignorados, se conserva solo el .gitkeep
+*.sql
+*.dump
+!.gitkeep

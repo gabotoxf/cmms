@@ -29,9 +29,6 @@ public class Usuario {
     @Column(length = 20)
     private String celular;
 
-    @Column
-    private byte[] avatar;
-
     @Column(name = "avatar_tipo", length = 50)
     private String avatarTipo;
 
@@ -100,14 +97,6 @@ public class Usuario {
 
     public void setCelular(String celular) {
         this.celular = celular;
-    }
-
-    public byte[] getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(byte[] avatar) {
-        this.avatar = avatar;
     }
 
     public String getAvatarTipo() {

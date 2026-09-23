@@ -72,11 +72,12 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
 
-# JWT + cookies/devtools/proxy pueden agrandar cabeceras (defecto: 8 KB).
-# El PUT multipart del avatar fallaba con 32KB incluso con 64KB en algunos navegadores
-# que envían cookies grandes, así que se deja en 128KB definitivo.
+# JWT + cookies/devtools pueden agrandar cabeceras (defecto: 8 KB).
+# El PUT multipart del avatar fallaba con 32KB/64KB/128KB/256KB (2026-09-23 header too large),
+# se deja en 512KB. El frontend envía Authorization: Bearer <JWT> + cookies de devtools
+# que crecen con cada login.
 server:
-  max-http-header-size: 128KB
+  max-http-header-size: 512KB
   tomcat:
     max-swallow-size: 10MB
 

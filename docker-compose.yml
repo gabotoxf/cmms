@@ -1,5 +1,6 @@
 # Levanta toda la pila con un comando:
 #   docker compose --env-file .env.properties up -d --build
+# ATENCIÓN: los datos reales viven en el volumen cmms_pgdata. `down -v` LO BORRA.
 #
 # Estructura del monorepo: la API Spring Boot vive en ./backend (ahí está su
 # Dockerfile) y el frontend en ./frontend. Este compose orquesta desde la raíz.
@@ -57,6 +58,9 @@ services:
     volumes:
       - uploads:/app/uploads
 
+# NUNCA uses `docker compose down -v` en dev con datos reales: borra pgdata y pierdes todo (ver backups/).
+# Para parar sin borrar: `docker compose down`  | Para backup: `.\scripts\backup.ps1`
 volumes:
   pgdata:
+    name: cmms_pgdata
   uploads:

@@ -137,6 +137,18 @@ cd backend
 - **Controllers** (MockMvc + la `SecurityConfig` real): contratos HTTP, códigos de estado, ProblemDetail y reglas por rol.
 - **Integración** (Testcontainers + Postgres real en Docker): constraints, auditoría, Specifications y queries. Se omiten automáticamente si Docker no está disponible (`disabledWithoutDocker`).
 
+## Persistencia y backups (evitar pérdida de usuarios)
+
+Los datos viven en el volumen Docker `cmms_pgdata` (`docker-compose.yml:60`). **Nunca** uses `docker compose down -v` ni `docker system prune --volumes` con datos reales: eso recreó el volumen el `2026-09-23 00:39 UTC` y disparó Flyway sobre esquema vacío + `DataSeeder.java:30` (solo inserta demos).
+
+Comandos seguros:
+```bash
+docker compose down              # para y conserva datos
+docker compose up -d --build     # rebuild sin borrar volumen
+.\scripts\backup.ps1             # pg_dump a backups/cmms_*.sql (rotación 14)
+.\scripts\restore.ps1 .\backups\cmms_YYYY-MM-DD_HHmm.sql
+```
+
 ## Migraciones de base de datos
 
 Flyway con scripts versionados en `backend/src/main/resources/db/migration` (nunca `ddl-auto: update`, que Hibernate solo usa en modo `validate`). Para agregar un cambio de esquema: nuevo archivo `V{n}__descripcion.sql`.

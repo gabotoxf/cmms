@@ -57,6 +57,8 @@ export class UiAvatarDrop {
   readonly vista = computed(() => (this.quitarMarcado() ? null : (this.preview() ?? this.actualUrl())));
 
   reiniciar(): void {
+    const p = this.preview();
+    if (p?.startsWith('blob:')) URL.revokeObjectURL(p);
     this.archivo.set(null);
     this.preview.set(null);
     this.quitarMarcado.set(false);
@@ -64,6 +66,8 @@ export class UiAvatarDrop {
   }
 
   quitar(): void {
+    const p = this.preview();
+    if (p?.startsWith('blob:')) URL.revokeObjectURL(p);
     this.archivo.set(null);
     this.preview.set(null);
     this.quitarMarcado.set(true);
@@ -132,9 +136,9 @@ export class UiAvatarDrop {
   private fijar(f: File): void {
     this.archivo.set(f);
     this.quitarMarcado.set(false);
-    const lector = new FileReader();
-    lector.onload = () => this.preview.set(String(lector.result));
-    lector.readAsDataURL(f);
+    const prev = this.preview();
+    if (prev?.startsWith('blob:')) URL.revokeObjectURL(prev);
+    this.preview.set(URL.createObjectURL(f));
   }
 
   /** Baja peso reduciendo tamaño y calidad hasta entrar en el límite. */

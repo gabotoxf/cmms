@@ -82,13 +82,21 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(java.util.Arrays.stream(appCorsOrigins.split(","))
-                .map(String::trim)
-                .filter(o -> !o.isBlank())
-                .toList());
+        // En dev localhost y 127.0.0.1 son orígenes distintos para el navegador
+        // (localStorage/Auth header no se comparte). Se permiten ambos aunque
+        // app.cors.origins solo traiga uno — evita el "funciona en 127.0.0.1 pero no en localhost".
+        var origins = java.util.Arrays.stream(appCorsOrigins.split(","))
+                .map(String::trim).filter(o -> !o.isBlank()).collect(java.util.stream.Collectors.toCollection(java.util.ArrayList::new));
+        // ponytail: lista explícita + pattern fallback, evita tener que sincronizar .env con cada host
+        if (origins.stream().noneMatch(o -> o.contains("127.0.0.1"))) origins.add("http://127.0.0.1:4200");
+        if (origins.stream().noneMatch(o -> o.contains("localhost"))) origins.add("http://localhost:4200");
+        config.setAllowedOrigins(origins);
+        config.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", config);
         return source;
