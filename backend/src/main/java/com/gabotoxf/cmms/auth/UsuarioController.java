@@ -40,12 +40,15 @@ public class UsuarioController {
     }
 
     @GetMapping
-    @Operation(summary = "Lista usuarios activos, opcionalmente filtrados por rol (ADMIN o INGENIERO)")
+    @Operation(summary = "Lista usuarios, opcionalmente filtrados por rol y estado (ADMIN o INGENIERO)")
     @PreAuthorize("hasAnyRole('ADMIN','INGENIERO')")
-    public List<UsuarioResponse> listar(@RequestParam(required = false) Rol rol) {
-        List<Usuario> usuarios = (rol != null)
-                ? usuarioRepository.findByRolAndActivoTrue(rol)
-                : usuarioRepository.findByActivoTrue();
+    public List<UsuarioResponse> listar(@RequestParam(required = false) Rol rol,
+                                        @RequestParam(required = false) Boolean activo) {
+        List<Usuario> usuarios;
+        if (rol != null && activo != null) usuarios = usuarioRepository.findByRolAndActivo(rol, activo);
+        else if (rol != null) usuarios = usuarioRepository.findByRol(rol);
+        else if (activo != null) usuarios = usuarioRepository.findByActivo(activo);
+        else usuarios = usuarioRepository.findAll();
         return usuarios.stream().map(UsuarioResponse::from).toList();
     }
 

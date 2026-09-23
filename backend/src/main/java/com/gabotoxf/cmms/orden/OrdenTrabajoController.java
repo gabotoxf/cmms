@@ -59,10 +59,11 @@ public class OrdenTrabajoController {
             @RequestParam(required = false) EstadoOrden estado,
             @RequestParam(required = false) TipoOrden tipo,
             @RequestParam(required = false) Long equipoId,
-            @RequestParam(required = false) Long tecnicoId) {
+            @RequestParam(required = false) Long tecnicoId,
+            @RequestParam(required = false) String q) {
 
         Pageable pageable = PageableUtils.sanitizar(pagina, tamano, orden, CAMPOS_ORDENABLES, "id");
-        return ordenService.listar(pageable, estado, tipo, equipoId, tecnicoId);
+        return ordenService.listar(pageable, estado, tipo, equipoId, tecnicoId, q);
     }
 
     @GetMapping("/{id}")

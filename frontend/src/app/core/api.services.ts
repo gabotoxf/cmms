@@ -20,13 +20,14 @@ export class EquiposService {
 
   listar(filtros: {
     pagina?: number; tamano?: number; orden?: string;
-    ubicacion?: string; riesgo?: string; estado?: string;
+    ubicacion?: string; q?: string; riesgo?: string; estado?: string;
   }): Observable<Pagina<Equipo>> {
     let params = new HttpParams()
       .set('pagina', filtros.pagina ?? 0)
       .set('tamano', filtros.tamano ?? 10);
     if (filtros.orden) params = params.set('orden', filtros.orden);
-    if (filtros.ubicacion) params = params.set('ubicacion', filtros.ubicacion);
+    if (filtros.q) params = params.set('q', filtros.q);
+    else if (filtros.ubicacion) params = params.set('ubicacion', filtros.ubicacion);
     if (filtros.riesgo) params = params.set('riesgo', filtros.riesgo);
     if (filtros.estado) params = params.set('estado', filtros.estado);
     return this.http.get<Pagina<Equipo>>(this.base, { params });
@@ -62,13 +63,15 @@ export class PlanesService {
   private readonly http = inject(HttpClient);
   private readonly base = '/api/planes-mantenimiento';
 
-  listar(filtros: { pagina?: number; tamano?: number; orden?: string; estado?: string; equipoId?: number }): Observable<Pagina<Plan>> {
+  listar(filtros: { pagina?: number; tamano?: number; orden?: string; estado?: string; equipoId?: number; q?: string; frecuenciaDias?: number }): Observable<Pagina<Plan>> {
     let params = new HttpParams()
       .set('pagina', filtros.pagina ?? 0)
       .set('tamano', filtros.tamano ?? 10);
     if (filtros.orden) params = params.set('orden', filtros.orden);
     if (filtros.estado) params = params.set('estado', filtros.estado);
     if (filtros.equipoId) params = params.set('equipoId', filtros.equipoId);
+    if (filtros.q) params = params.set('q', filtros.q);
+    if (filtros.frecuenciaDias) params = params.set('frecuenciaDias', filtros.frecuenciaDias);
     return this.http.get<Pagina<Plan>>(this.base, { params });
   }
 
@@ -87,6 +90,11 @@ export class PlanesService {
 
   vencidos(): Observable<Plan[]> {
     return this.http.get<Plan[]>(`${this.base}/vencidos`);
+  }
+
+  /** Compat: alias de pendientes filtrado, usa X-Skip-Loader opcional a nivel caller */
+  pendientesFiltro(estado?: string): Observable<Plan[]> {
+    return this.pendientes(estado);
   }
 
   revision(): Observable<ResumenRevision> {
@@ -120,7 +128,7 @@ export class OrdenesService {
 
   listar(filtros: {
     pagina?: number; tamano?: number; orden?: string; estado?: string; tipo?: string;
-    equipoId?: number; tecnicoId?: number;
+    equipoId?: number; tecnicoId?: number; q?: string;
   }): Observable<Pagina<Orden>> {
     let params = new HttpParams()
       .set('pagina', filtros.pagina ?? 0)
@@ -130,6 +138,7 @@ export class OrdenesService {
     if (filtros.tipo) params = params.set('tipo', filtros.tipo);
     if (filtros.equipoId) params = params.set('equipoId', filtros.equipoId);
     if (filtros.tecnicoId) params = params.set('tecnicoId', filtros.tecnicoId);
+    if (filtros.q) params = params.set('q', filtros.q);
     return this.http.get<Pagina<Orden>>(this.base, { params });
   }
 
@@ -170,9 +179,11 @@ export class OrdenesService {
 export class UsuariosService {
   private readonly http = inject(HttpClient);
 
-  listar(rol?: string): Observable<Usuario[]> {
-    const params = rol ? new HttpParams().set('rol', rol) : undefined;
-    return this.http.get<Usuario[]>('/api/usuarios', { params });
+  listar(rol?: string, activo?: boolean): Observable<Usuario[]> {
+    let params = new HttpParams();
+    if (rol) params = params.set('rol', rol);
+    if (activo !== undefined) params = params.set('activo', String(activo));
+    return this.http.get<Usuario[]>('/api/usuarios', { params: params.keys().length ? params : undefined });
   }
 
   /** Edición total por el ADMIN (el email no se toca). */
@@ -224,6 +235,12 @@ export class ReportesService {
     a.download = nombre;
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  extraerFilename(contentDisposition: string | null): string | null {
+    if (!contentDisposition) return null;
+    const m = /filename\*?=(?:UTF-8''|")?([^";\n]+)/i.exec(contentDisposition);
+    return m ? decodeURIComponent(m[1].replace(/"/g, '')) : null;
   }
 }
 

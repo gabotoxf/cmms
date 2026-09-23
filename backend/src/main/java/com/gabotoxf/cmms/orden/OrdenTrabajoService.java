@@ -145,6 +145,12 @@ public class OrdenTrabajoService {
     @Transactional(readOnly = true)
     public PaginaResponse<OrdenResponse> listar(Pageable pageable, EstadoOrden estado, TipoOrden tipo,
                                                 Long equipoId, Long tecnicoId) {
+        return listar(pageable, estado, tipo, equipoId, tecnicoId, null);
+    }
+
+    @Transactional(readOnly = true)
+    public PaginaResponse<OrdenResponse> listar(Pageable pageable, EstadoOrden estado, TipoOrden tipo,
+                                                Long equipoId, Long tecnicoId, String q) {
         Specification<OrdenTrabajo> spec = (root, query, cb) -> cb.conjunction();
         if (estado != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("estado"), estado));
@@ -157,6 +163,14 @@ public class OrdenTrabajoService {
         }
         if (tecnicoId != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("tecnico").get("id"), tecnicoId));
+        }
+        if (q != null && !q.isBlank()) {
+            String like = "%" + q.toLowerCase().trim() + "%";
+            spec = spec.and((root, query, cb) -> cb.or(
+                    cb.like(cb.lower(root.get("titulo")), like),
+                    cb.like(cb.lower(root.get("descripcion")), like),
+                    cb.like(cb.lower(root.get("equipo").get("serial")), like),
+                    cb.like(cb.lower(root.get("equipo").get("nombre")), like)));
         }
 
         Page<OrdenTrabajo> page = ordenRepository.findAll(spec, pageable);

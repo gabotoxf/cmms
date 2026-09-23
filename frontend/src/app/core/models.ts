@@ -52,6 +52,10 @@ export interface Plan {
   equipoId: number;
   equipoSerial: string;
   equipoNombre: string;
+  equipoUbicacion?: string | null;
+  equipoClasificacionRiesgo?: string | null;
+  equipoMarca?: string | null;
+  equipoModelo?: string | null;
   frecuenciaDias: number;
   ultimaEjecucion?: string | null;
   proximaFecha: string;

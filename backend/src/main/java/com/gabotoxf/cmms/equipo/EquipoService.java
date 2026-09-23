@@ -47,12 +47,28 @@ public class EquipoService {
     @Transactional(readOnly = true)
     public PaginaResponse<EquipoResponse> listar(Pageable pageable, String ubicacion,
                                                  ClasificacionRiesgo riesgo, EstadoEquipo estado) {
+        return listar(pageable, ubicacion, false, riesgo, estado);
+    }
+
+    @Transactional(readOnly = true)
+    public PaginaResponse<EquipoResponse> listar(Pageable pageable, String term,
+                                                 boolean generico,
+                                                 ClasificacionRiesgo riesgo, EstadoEquipo estado) {
         Specification<Equipo> spec = (root, query, cb) -> cb.conjunction();
 
-        if (ubicacion != null && !ubicacion.isBlank()) {
-            spec = spec.and((root, query, cb) ->
-                    cb.like(cb.lower(root.get("ubicacion")),
-                            "%" + ubicacion.toLowerCase().trim() + "%"));
+        if (term != null && !term.isBlank()) {
+            String like = "%" + term.toLowerCase().trim() + "%";
+            if (generico) {
+                spec = spec.and((root, query, cb) -> cb.or(
+                        cb.like(cb.lower(root.get("serial")), like),
+                        cb.like(cb.lower(root.get("nombre")), like),
+                        cb.like(cb.lower(root.get("ubicacion")), like),
+                        cb.like(cb.lower(root.get("marca")), like),
+                        cb.like(cb.lower(root.get("modelo")), like)));
+            } else {
+                spec = spec.and((root, query, cb) ->
+                        cb.like(cb.lower(root.get("ubicacion")), like));
+            }
         }
         if (riesgo != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("clasificacionRiesgo"), riesgo));

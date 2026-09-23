@@ -44,10 +44,12 @@ public class PlanMantenimientoController {
             @RequestParam(defaultValue = "10") int tamano,
             @RequestParam(defaultValue = "proximaFecha") String orden,
             @RequestParam(required = false) EstadoPlan estado,
-            @RequestParam(required = false) Long equipoId) {
+            @RequestParam(required = false) Long equipoId,
+            @RequestParam(required = false) String q,
+            @RequestParam(required = false) Integer frecuenciaDias) {
 
         Pageable pageable = PageableUtils.sanitizar(pagina, tamano, orden, CAMPOS_ORDENABLES, "proximaFecha");
-        return planService.listar(pageable, estado, equipoId);
+        return planService.listar(pageable, estado, equipoId, q, frecuenciaDias);
     }
 
     @GetMapping("/{id}")

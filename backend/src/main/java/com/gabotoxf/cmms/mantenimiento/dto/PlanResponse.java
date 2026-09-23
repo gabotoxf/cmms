@@ -12,6 +12,10 @@ public record PlanResponse(
         Long equipoId,
         String equipoSerial,
         String equipoNombre,
+        String equipoUbicacion,
+        String equipoClasificacionRiesgo,
+        String equipoMarca,
+        String equipoModelo,
         Integer frecuenciaDias,
         LocalDate ultimaEjecucion,
         LocalDate proximaFecha,
@@ -26,11 +30,16 @@ public record PlanResponse(
      */
     public static PlanResponse from(PlanMantenimiento plan, EstadoPlan estado, LocalDate hoy) {
         long diasRestantes = ChronoUnit.DAYS.between(hoy, plan.getProximaFecha());
+        var eq = plan.getEquipo();
         return new PlanResponse(
                 plan.getId(),
-                plan.getEquipo().getId(),
-                plan.getEquipo().getSerial(),
-                plan.getEquipo().getNombre(),
+                eq.getId(),
+                eq.getSerial(),
+                eq.getNombre(),
+                eq.getUbicacion(),
+                eq.getClasificacionRiesgo().name(),
+                eq.getMarca(),
+                eq.getModelo(),
                 plan.getFrecuenciaDias(),
                 plan.getUltimaEjecucion(),
                 plan.getProximaFecha(),

@@ -59,16 +59,28 @@ public interface PlanMantenimientoRepository extends JpaRepository<PlanMantenimi
     }
 
     /**
-     * Specification para el listado paginado: filtro opcional por equipo.
+     * Specification para el listado paginado: filtro opcional por equipo/q/frecuencia/estado.
      * El estado derivado (VENCIDO/PROXIMO/AL_DIA) no es columna, así que se
      * traduce a rangos de fechas sobre proximaFecha usando el umbral de alerta.
      */
     static Specification<PlanMantenimiento> conFiltros(Long equipoId, LocalDate hoy, int diasAlerta,
-                                                       EstadoPlan estado) {
+                                                       EstadoPlan estado, String q, Integer frecuenciaDias) {
         return (root, query, cb) -> {
             List<Predicate> where = new java.util.ArrayList<>();
             if (equipoId != null) {
                 where.add(cb.equal(root.get("equipo").get("id"), equipoId));
+            }
+            if (q != null && !q.isBlank()) {
+                String like = "%" + q.toLowerCase().trim() + "%";
+                Predicate pSerial = cb.like(cb.lower(root.get("equipo").get("serial")), like);
+                Predicate pNombre = cb.like(cb.lower(root.get("equipo").get("nombre")), like);
+                Predicate pUbic = cb.like(cb.lower(root.get("equipo").get("ubicacion")), like);
+                Predicate pMarca = cb.like(cb.lower(root.get("equipo").get("marca")), like);
+                Predicate pModelo = cb.like(cb.lower(root.get("equipo").get("modelo")), like);
+                where.add(cb.or(pSerial, pNombre, pUbic, pMarca, pModelo));
+            }
+            if (frecuenciaDias != null) {
+                where.add(cb.equal(root.get("frecuenciaDias"), frecuenciaDias));
             }
             if (estado == EstadoPlan.VENCIDO) {
                 where.add(cb.lessThan(root.get("proximaFecha"), hoy));
@@ -83,5 +95,10 @@ public interface PlanMantenimientoRepository extends JpaRepository<PlanMantenimi
             where.add(noBaja);
             return cb.and(where.toArray(new Predicate[0]));
         };
+    }
+
+    static Specification<PlanMantenimiento> conFiltros(Long equipoId, LocalDate hoy, int diasAlerta,
+                                                       EstadoPlan estado) {
+        return conFiltros(equipoId, hoy, diasAlerta, estado, null, null);
     }
 }

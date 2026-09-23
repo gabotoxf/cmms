@@ -114,9 +114,14 @@ public class PlanMantenimientoService {
      */
     @Transactional(readOnly = true)
     public PaginaResponse<PlanResponse> listar(Pageable pageable, EstadoPlan estado, Long equipoId) {
+        return listar(pageable, estado, equipoId, null, null);
+    }
+
+    @Transactional(readOnly = true)
+    public PaginaResponse<PlanResponse> listar(Pageable pageable, EstadoPlan estado, Long equipoId, String q, Integer frecuenciaDias) {
         LocalDate hoy = LocalDate.now(clock);
         Page<PlanMantenimiento> page = planRepository.findAll(
-                PlanMantenimientoRepository.conFiltros(equipoId, hoy, diasAlerta, estado), pageable);
+                PlanMantenimientoRepository.conFiltros(equipoId, hoy, diasAlerta, estado, q, frecuenciaDias), pageable);
         List<PlanResponse> contenido = page.getContent().stream()
                 .map(plan -> PlanResponse.from(plan, estadoDe(plan), hoy))
                 .toList();

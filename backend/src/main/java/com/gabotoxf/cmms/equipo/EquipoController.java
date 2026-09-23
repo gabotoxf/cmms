@@ -62,11 +62,14 @@ public class EquipoController {
             @RequestParam(defaultValue = "10") int tamano,
             @RequestParam(defaultValue = "id") String orden,
             @RequestParam(required = false) String ubicacion,
+            @RequestParam(required = false) String q,
             @RequestParam(required = false) ClasificacionRiesgo riesgo,
             @RequestParam(required = false) EstadoEquipo estado) {
 
         Pageable pageable = PageableUtils.sanitizar(pagina, tamano, orden, CAMPOS_ORDENABLES, "id");
-        return equipoService.listar(pageable, ubicacion, riesgo, estado);
+        // q es búsqueda genérica (serial/nombre/ubicacion/marca); ubicacion mantiene compat.
+        String term = (q != null && !q.isBlank()) ? q : ubicacion;
+        return equipoService.listar(pageable, term, q != null && !q.isBlank(), riesgo, estado);
     }
 
     @GetMapping("/{id}")
