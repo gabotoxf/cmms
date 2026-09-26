@@ -51,6 +51,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Documentación de la API: pública para que el revisor pueda verla
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                        .requestMatchers("/actuator/health").permitAll()
                         .requestMatchers("/api/auth/login", "/api/auth/registro", "/api/auth/recuperar", "/api/auth/restablecer").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/**").hasAnyRole("ADMIN", "INGENIERO", "TECNICO", "AUDITOR")
                         .anyRequest().authenticated())
@@ -91,7 +92,7 @@ public class SecurityConfig {
         if (origins.stream().noneMatch(o -> o.contains("127.0.0.1"))) origins.add("http://127.0.0.1:4200");
         if (origins.stream().noneMatch(o -> o.contains("localhost"))) origins.add("http://localhost:4200");
         config.setAllowedOrigins(origins);
-        config.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*", "https://*.vercel.app"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setExposedHeaders(List.of("Authorization", "Content-Type"));

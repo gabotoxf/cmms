@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: cmms-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    healthCheckPath: /actuator/health
+    plan: free
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DB_URL
+        sync: false # jdbc:postgresql://<host-directo-neon>/cmms?sslmode=require
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: APP_CORS_ORIGINS
+        sync: false # https://tu-app.vercel.app (opcional: sin esto acepta *.vercel.app)

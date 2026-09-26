@@ -77,6 +77,7 @@ springdoc:
 # se deja en 512KB. El frontend envía Authorization: Bearer <JWT> + cookies de devtools
 # que crecen con cada login.
 server:
+  port: ${PORT:8080}
   max-http-header-size: 512KB
   tomcat:
     max-swallow-size: 10MB
@@ -86,3 +87,9 @@ cmms:
   carga-masiva:
     max-filas: ${CMMS_CARGA_MAX_FILAS:2000}
     max-archivo-bytes: ${CMMS_CARGA_MAX_BYTES:5242880}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health

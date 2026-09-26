@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ToastService } from '../../shared/ui/toast';
 import { AuthService } from '../../core/auth.service';
+import { backendWakingUp } from '../../core/api-base.interceptor';
 
 @Component({
   selector: 'app-login',
@@ -90,6 +91,13 @@ import { AuthService } from '../../core/auth.service';
                   <a routerLink="/recuperar" class="font-medium text-[#044e46] hover:text-[#033b35] cursor-pointer">¿Olvidaste tu contraseña?</a>
                 </div>
 
+                @if (despertando()) {
+                  <div class="flex items-start gap-2 rounded-lg border border-amber-300 bg-amber-50 px-3 py-2.5 text-xs leading-relaxed text-amber-800" role="status">
+                    <span class="mt-0.5 h-3.5 w-3.5 shrink-0 rounded-full border-2 border-amber-800/25 border-t-amber-800 animate-spin"></span>
+                    <span>Despertando el servidor gratis de Render… tarda 30–60s la primera vez, no cierres esta página.</span>
+                  </div>
+                }
+
                 <button (click)="entrar()" [disabled]="cargando()" class="mt-2 inline-flex items-center justify-center gap-2 h-10 rounded-lg bg-[#044e46] hover:bg-[#033b35] text-white text-sm font-semibold shadow-sm disabled:opacity-50 cursor-pointer">
                   @if (cargando()) {
                     <span class="w-4 h-4 rounded-full border-2 border-white/30 border-t-white animate-spin"></span> Ingresando…
@@ -140,6 +148,7 @@ export class Login {
   email = '';
   password = '';
   readonly cargando = signal(false);
+  readonly despertando = backendWakingUp;
   readonly verClave = signal(false);
   readonly recordarme = signal(false);
   readonly year = new Date().getFullYear();
