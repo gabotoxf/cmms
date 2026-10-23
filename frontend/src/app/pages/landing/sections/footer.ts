@@ -17,9 +17,7 @@ import { RouterLink } from '@angular/router';
       <div class="grid lg:grid-cols-12 gap-10 pb-10 border-b border-white/5">
         <div class="lg:col-span-5">
           <a routerLink="/" class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-white text-[#052e2b] flex items-center justify-center shadow-lg">
-              <span class="material-symbols-outlined text-[22px]">medical_services</span>
-            </div>
+            <img src="images/isotipo.png" alt="BIOCMMS" class="w-10 h-10 rounded-xl bg-white object-contain p-1 shadow-lg" />
             <div class="leading-none">
               <div class="font-bold tracking-tight text-white text-[15px]" style="font-family:'Montserrat',sans-serif">BIOCMMS</div>
               <div class="text-[10px] tracking-[0.14em] uppercase text-white/40 font-medium" style="font-family:'Roboto',sans-serif">Ingeniería Clínica · Res.3100</div>
