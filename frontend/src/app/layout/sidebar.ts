@@ -13,9 +13,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
       <div class="pointer-events-none absolute right-6 top-24 h-40 w-40 rounded-full bg-white/[0.03]"></div>
       <!-- Logo / marca -->
       <div class="relative flex items-center gap-3 px-1">
-        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white text-[#044e46]">
-          <span class="material-symbols-outlined text-[20px]">medical_services</span>
-        </div>
+        <img src="images/isotipo.png" alt="BIOCMMS" class="h-9 w-9 shrink-0 rounded-lg bg-white object-contain p-1" />
         <div class="leading-tight">
           <div class="text-sm font-bold tracking-tight" style="font-family:'Montserrat',sans-serif">BIOCMMS</div>
           <div class="text-[10px] tracking-widest uppercase opacity-60">Ingeniería Clínica</div>

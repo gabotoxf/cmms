@@ -15,9 +15,7 @@ import { AuthService } from '../../core/auth.service';
         <div class="absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-white/5"></div>
         <div class="relative">
           <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-white text-[#044e46] flex items-center justify-center">
-              <span class="material-symbols-outlined text-[20px]">medical_services</span>
-            </div>
+            <img src="images/isotipo.png" alt="BIOCMMS" class="w-9 h-9 rounded-lg bg-white object-contain p-1" />
             <div>
               <div class="font-bold tracking-tight text-sm" style="font-family:'Montserrat',sans-serif">BIOCMMS</div>
               <div class="text-[10px] tracking-widest uppercase opacity-60">Ingeniería Clínica</div>
