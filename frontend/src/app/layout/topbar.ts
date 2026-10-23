@@ -13,7 +13,7 @@ import { UiAvatarDrop } from '../shared/ui/avatar-drop';
 
       <!-- Marca / breadcrumb de módulo -->
       <div class="flex items-center gap-2 whitespace-nowrap">
-        <img src="images/logotipo.png" alt="CMMS" class="h-6 w-auto" />
+        <img src="images/isotipo.png" alt="CMMS" class="h-6 w-6" />
         <span class="text-white/30">/</span>
         <span class="text-white/70">{{ seccion }}</span>
       </div>
