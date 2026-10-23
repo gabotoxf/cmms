@@ -16,11 +16,11 @@ import { RouterLink } from '@angular/router';
     >
       <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-6">
         <a routerLink="/" class="flex items-center gap-3">
-          <div
-            class="w-9 h-9 rounded-xl bg-white text-[#044e46] flex items-center justify-center shadow-sm"
-          >
-            <span class="material-symbols-outlined text-[20px]">medical_services</span>
-          </div>
+          <img
+            src="images/isotipo.png"
+            alt="BIOCMMS"
+            class="w-9 h-9 rounded-xl bg-white object-contain p-1 shadow-sm"
+          />
           <div class="leading-none">
             <div
               class="font-bold tracking-tight text-white text-sm"
